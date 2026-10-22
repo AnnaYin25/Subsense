@@ -1,0 +1,351 @@
+# SubSense - Project Progress
+
+```
+上次更新：2026-04-16
+当前阶段：Web App 打磨中
+从这里开始：下方 NEXT 部分
+```
+
+---
+
+## COMPLETED
+
+### Phase 1 — 文档 & 架构
+- ✅ PRD.md、APP_FLOW.md、TECH_STACK.md、FRONTEND_GUIDELINES.md、BACKEND_STRUCTURE.md、IMPLEMENTATION_PLAN.md
+
+### Phase 2 — 核心功能实现
+- ✅ Supabase 集成 + Auth（登录/注册）
+- ✅ ManagerScreen — 订阅列表、筛选（All/Active/Paused/Watchlist）、日历、FAB
+- ✅ SubscriptionDetailScreen — badge系统、续费日期计算、编辑入口
+- ✅ AddSubscriptionScreen — emoji选择、计划名快选、自定义分类、通知开关
+- ✅ CheckInScreen — 3方向滑动卡片、动画avatar、AI跟进问题
+- ✅ AuditScreen — 6阶段FSM、Claude对话、订阅评分报告、保存到Watchlist
+- ✅ ReportScreen（v2 by Xiaoyi）— 月度评分、维度分析、浪费订阅检测、截图分享
+- ✅ OnboardingScreen、SetupScreen、AuthScreen
+- ✅ Watchlist状态 — 作为独立pre-subscription状态，Subscribe Now两步激活
+- ✅ 自定义分类持久化（AsyncStorage）
+- ✅ CheckIn v2（by Rongqian）— checkinLLM.ts、checkinSummary.ts、SubscriptionDetailScreen集成
+
+### Merge完成（2026-03-02）
+- ✅ Rongqian branch → main（fast-forward，checkin-v2全套）
+- ✅ Xiaoyi branch → main（ReportScreen v2 + react-native-view-shot依赖）
+
+### Push Notifications（2026-04-07）
+- ✅ 安装 `expo-notifications`，加入 app.json plugin
+- ✅ `app/src/utils/notificationScheduler.ts` — 权限申请、schedule/cancel、批量恢复
+- ✅ AddSubscriptionScreen — 保存时自动 schedule（3-day / same-day）
+- ✅ SubscriptionDetailScreen — toggle 即时保存+schedule，移除无效 Push 开关
+- ✅ SubscriptionContext — 启动时批量恢复通知；删除订阅时取消通知
+- ✅ 修复 SubscriptionDetailScreen `usageScore=0` 导致的 "Text must be in <Text>" crash
+- ✅ Detail 页加入 "Test (fires in 10s)" 按钮方便本地测试
+
+### Audit v4 测试环境（2026-03-03）
+- ✅ `Docs/audit_testing/audit_scorer.py` — v4 scoring engine
+- ✅ `Docs/audit_testing/audit_prompt.py` — v4 对话协议（7阶段）
+- ✅ `Docs/audit_testing/test_scenarios.py` — 15个v4场景，15/15通过
+- ✅ `Docs/audit_testing/audit_notebook.ipynb` — 全面更新至v4
+
+### Phase 3 — 打磨 & 数据对接（2026-04-07）
+
+#### Settings 页面
+- ✅ 新建 SettingsScreen — budget、currency、reminder day/days before、persona retake
+- ✅ 入口：Manager 右上角 ⚙️（从 logout alert 改为 navigate to Settings）
+- ✅ Settings 以 modal 方式从底部弹出（RootNavigator stack screen）
+- ✅ SubscriptionContext 新增 `updateUserProfile()` 写 users 表
+- ✅ Manager 改用 `useFocusEffect` 刷新数据，Settings 改预算后立即生效
+
+#### Report 历史趋势
+- ✅ 修复 `computedReportHistory` bug：之前所有历史月份都用当前花费，现在按月计算（根据订阅创建/取消日期估算）
+- ✅ 新增 "Spending by Month" 横向 bar chart，显示多月花费对比
+- ✅ 趋势文字："Your spending decreased X% over the past N months"
+
+#### Audit 数据持久化
+- ✅ 修复：audit reports 只存在内存，重启后消失
+- ✅ 完成 audit 时保存到 Supabase `assessments` 表
+- ✅ `useFocusEffect` 加载历史 audit reports，字段映射完整
+
+#### Usage → Satisfaction Signal 重命名
+- ✅ ReportScreen：`📱 Usage Rate` → `😊 Satisfaction`，描述从"使用量"改为"满意度"
+- ✅ CheckInScreen 卡片底部：进度条（伪精确）→ 信号 badge（Loving it / Mixed signals / On the fence / No signals yet）
+- ✅ SubscriptionDetailScreen：`Usage: 65%` → `CHECK-IN SIGNALS` 区块，从 DB 加载真实 check-in 历史，渲染彩色 dot 序列（绿/红/黄）
+- ✅ database.ts：新增 `getSubRecentSignals(userId, subId, limit)` 工具函数
+
+#### Bug 修复
+- ✅ CheckIn summary "Looking Good" 乱码：`·` 分隔符 → 每行独立 `✓ Name`
+- ✅ Manager budget 显示不更新：`useEffect([user])` → `useFocusEffect`
+
+### Phase 3 打磨（2026-04-10）
+
+#### CheckIn 体验改善
+- ✅ 问题文字溢出修复：`questionTitle` 加 `numberOfLines={3}` + `adjustsFontSizeToFit`，长问题自动缩字，第4选项不再被遮挡
+- ✅ ignore 模式新增 Skip 按钮：`handleSkipIgnore` 直接提交 love 信号跳到下一张，无需强制选忽略时长；"Keep asking me" 和 "Skip" 改为横排节省空间
+- ✅ reset 逻辑验证：`nextCard()` 每次重置 cardMode，`handleDoneReset` 后 cardMode 已是 'card'，逻辑正确
+
+#### Settings / Report 改善
+- ✅ Settings 保存后 "Saved ✓" 视觉反馈：按钮变绿，2秒后恢复
+- ✅ Report "Spending by Month" 单月也显示：条件从 `> 1` 改为 `>= 1`，单月时 hint 改为 "Current month"
+
+#### 代码清理
+- ✅ CheckInScreen 删除遗留样式：trendRow / trendBarContainer / trendBarFill / trendTag / trendTagText + 全部 Legacy 注释段
+- ✅ SubscriptionDetailScreen 删除遗留样式：scoresCard / scoreColumn / scoreLabel / scoreValue（旧双分数卡）+ actionButtonDanger / actionButtonTextDanger（旧 danger 按钮变体）
+
+#### 空状态
+- ✅ ManagerScreen：filteredSubs 为空时显示 "No subscriptions yet / Tap + to add"；filter 下无结果时显示 "Try a different filter"
+
+### Web App 打磨 Phase 3（2026-04-16）
+
+#### Landing Page & Favicon
+- ✅ `/` 起始页：之前只是 redirect，改为正式落地页 — SubSense logo + 品牌名、标语 "Stop paying for subscriptions you don't use."、feature pills、"Get Started — It's Free" → `/login?mode=signup`、"Sign In" 链接；已登录用户自动跳 dashboard
+- ✅ `/login` 支持 `?mode=signup` URL 参数，用 `Suspense` 包裹 `useSearchParams` 以通过 Next.js prerender
+- ✅ Web favicon：`app/icon.tsx` / `app/apple-icon.tsx` 改为读取 `public/subsense-logo.png` 渲染真实 logo（之前是程序生成的蓝底白"S"）；`public/icon.png` 用 `subsense-logo.png` 覆盖
+- ✅ App favicon：`app/assets/favicon.png` 用 `subsense.png` 覆盖（之前是 48x48 灰色占位图）
+
+#### /setup 对齐 app（PersonaResult 独立页）
+- ✅ 头像从 12 个扩展到 3 页 × 12 = 36 个（与 app `SetupScreen` 一致），Prev/Next 按钮 + 3 个点状指示器
+- ✅ 完成 setup 后 `router.replace('/setup/result')`（之前是同页内 `showResult` state 切换）
+- ✅ 新建 `/setup/result` 页面 — 独立加载 persona + 用户数据，显示 avatar / name / emoji / title / description / traits，底部固定 "Continue to App" → `/dashboard`
+
+#### /setup 8 项 UX 改进
+- ✅ 🐛 `handleSkip` 丢答案 bug：之前只传 `favorite_categories`，把已答的问题全丢了；现在传 `{ ...answers, favorite_categories: categories }`
+- ✅ 顶部 "← Back" 按钮（step > -4 时显示），可回到上一步改 name / budget / avatar
+- ✅ 全屏 saving overlay：`fixed inset-0` 半透明背景 + spinner + "Setting up your profile..."（之前只是小字 "Saving..."）
+- ✅ Budget input 加 `autoFocus`（与 name step 一致）
+- ✅ 分类步骤按钮动态文案：0 个分类显示 "No Favorites — Skip"，≥1 个显示 "Continue"
+- ✅ 跨页选中头像可见性：header 显示当前选中预览（带 "SELECTED" 标），选中头像右上角加 ✓ 勾标，当选中不在当前页时显示 "Your selection is on page X — jump to it" 快捷链接
+- ✅ `/setup/result` 加载 spinner + "Generating your profile..."（之前是纯空白）
+- ✅ `/setup/result` 错误回退卡片：显示 ⚠️ + 错误文案 + Retry / "Skip to Dashboard" 两个按钮；avatar URL 失败自动隐藏（`onError` handler）
+
+### Web App 打磨 Phase 2（2026-04-11）
+
+#### CheckIn 卡片固定比例
+- ✅ 卡片容器改为 `aspect-ratio: 3/4` + `width: min(85%, 340px)` 内层 wrapper，三张卡（ghost×2 + 主卡）填满 `absolute inset-0`
+- ✅ 三个底部按钮（Review/Maybe/Keep It）移入同一个 `flex-col gap-6` 容器，卡片与按钮间距固定，整体 `justify-center` 居中
+- ✅ `pt-4 pb-16` 把视觉重心往上移
+
+#### Audit 页面对齐 app
+- ✅ BottomNav 事件控制：新增 `hide-bottom-nav` / `show-bottom-nav` 自定义事件，chat/finalizing/report 模式隐藏 nav，home 模式恢复（对应 app 的 `tabBarStyle: { display: 'none' }`）
+- ✅ Home view：删除多余 sticky header，保留 app 风格大标题区
+- ✅ 字体统一：report 列表名 `font-bold` → `font-black`；alternatives modal 名字 `font-bold` → `font-black`，cost 颜色蓝→绿+uppercase，reason `text-xs` → `text-sm`
+- ✅ Chat view：`fixed top:0 left:0 right:0` 布局，header `flex-shrink-0`，messages `flex-1 overflow-y-auto`，footer `flex-shrink-0`
+
+#### iOS 键盘处理（Audit Chat）
+- ✅ Viewport meta：`maximumScale: 1`（禁止自动缩放）+ `interactiveWidget: 'resizes-content'`
+- ✅ 最终方案：`visualViewport.height` 动态设置 chat 容器高度 + `scrollTo(0,0)` 防页面滚动。不使用 transform/动态 top/bottom，只改 height 一个属性避免抖动。body 仅设 `overflow: hidden`
+- ⚠️ iOS PWA 键盘适配是已知难题，纯 CSS 方案（dvh / interactive-widget / fixed inset-0）均不可靠，必须结合 visualViewport JS
+
+#### 其他修复
+- ✅ Login 页 hydration warning：input 加 `suppressHydrationWarning`（浏览器密码管理器注入 `__gcruniqueid` 属性）
+
+### Web App 打磨（2026-04-11）
+
+#### Bug 修复 & 体验
+- ✅ CheckIn loading 卡死：`weekStatusLoaded` 依赖 `user?.id`，无 user 时永不 resolve → 改为 mounted 后无 user 直接 `setWeekStatusLoaded(true)`
+- ✅ Header 高度统一：Check-In / Health header 字体、占位改为与 Manager 一致（`text-sm font-black tracking-[0.15em]`，`w-8 h-8` 撑高）
+- ✅ PWA 配置：`app/manifest.ts`、`app/icon.tsx`、`app/apple-icon.tsx`（蓝底白"S"）、layout 加 `appleWebApp` + `viewport-fit=cover`
+- ✅ Safe area：BottomNav 加 `env(safe-area-inset-bottom)`，layout 加 `viewportFit: 'cover'`
+- ✅ devIndicators: false 加入 next.config.ts
+- ✅ CheckIn 预加载导致其他页面慢：删除进入页面即发 6 个 Claude 请求的 pre-fetch effect，改为按需加载
+- ✅ BottomNav 高度微调：`pt-2 pb-3` → `pt-1.5 pb-2`
+
+### Web App 建设 Phase 3（2026-04-11）
+
+#### 最后两页完成
+- ✅ `/audit` — AuditPage（1418行）：4视图 FSM、Claude 多轮对话、6阶段协议、CircularProgress SVG、Evidence & Logic 因子、CTAConfig、Alternatives modal、assessments 持久化
+- ✅ `/checkin` — CheckInPage（1287行）：Framer Motion drag="x" 拖拽卡片、rotate/indicator useTransform、card/question/ignore 3种卡片模式、love/review/unsure 问题流、weekly gate + streak、session summary、localStorage 替代 AsyncStorage、framer-motion v12 安装
+
+### Web App 建设 Phase 2（2026-04-10）
+
+#### 页面迁移
+- ✅ `/subscription/[id]` — SubscriptionDetailPage：英雄区、费用卡、plan details、check-in signals、cancel/pause/delete modal、watchlist activate
+- ✅ `/subscription/new` — AddSubscriptionPage（通过共用 SubscriptionForm 组件）
+- ✅ `/subscription/[id]/edit` — EditSubscriptionPage（复用 SubscriptionForm）
+- ✅ `components/SubscriptionForm.tsx` — 共用 Add/Edit 表单：icon picker、plan chips、billing cycle、custom category、date picker、notes
+- ✅ `/settings` — SettingsPage：persona hero + 内嵌 quiz、budget、currency、check-in day、renewal alert、saved feedback、sign out 确认
+- ✅ `/report` — ReportPage 严格按照 app 复现：Score ring(208px SVG)、quick stats row、wallet section、水平 spending bars、SVG 折线图 + trend chips、Score Breakdown(最低维度红色高亮)、Subscriptions to Review(Review 按钮)、Optimization Insights、Share CTA
+- ✅ `components/BottomNav.tsx` — 严格对齐 app tab bar：Manager / Check-In / Audit / Report，SVG 图标对应 Ionicons(list/checkmark-circle-outline/search/stats-chart)，无上边框+shadow，active spring scale
+- ✅ 字体修复：Inter 加载 400–900 全字重，font-black(900) 正确渲染
+- ✅ Bug fix：sign out 后 router.replace('/login') 正确跳转
+- ✅ Manager 订阅卡片样式对齐 app：w-14 icon、font-black、watchlist 左蓝边框、paused opacity-50
+
+### Web App 建设（2026-04-10）
+
+#### 脚手架 & 基础设施
+- ✅ `web/` 目录 — Next.js 16 + TypeScript + Tailwind + App Router
+- ✅ `.env.local` — Supabase keys（NEXT_PUBLIC_*）+ ANTHROPIC_API_KEY（server-only）
+- ✅ `app/api/claude/route.ts` — Claude API 服务端代理（API key 不暴露前端）
+- ✅ `lib/supabase/client.ts` — Supabase browser client
+- ✅ `tsconfig.json` target ES2020，`allowedDevOrigins` 配置局域网访问
+- ✅ 字体换 Inter（接近 SF Pro），浅色主题（backgroundLight #F9FAFB）
+
+#### 复用代码迁移
+- ✅ `lib/types/index.ts` — 全部类型直接复用
+- ✅ `lib/utils/database.ts` — Supabase 查询，修正 supabase import 路径
+- ✅ `lib/utils/claude.ts` / `checkinLLM.ts` / `checkinSummary.ts` / `auditScorer.ts` — 纯逻辑全复用
+- ✅ `lib/utils/categoryManager.ts` — AsyncStorage → localStorage
+- ✅ `lib/utils/anthropicClient.ts` — 重写为调用 `/api/claude` route
+- ✅ 其余 utils（personaGenerator / messageSplitter / alternativesGenerator / avatarUtils 等）全复用
+
+#### 页面 & Context
+- ✅ `lib/contexts/AuthContext.tsx` — 去 RN hook，逻辑不变
+- ✅ `lib/contexts/SubscriptionContext.tsx` — 去通知相关，逻辑不变
+- ✅ `app/page.tsx` — 根路由，检查 auth 自动跳转
+- ✅ `app/login/page.tsx` — 登录/注册页，浅色风格
+- ✅ `app/dashboard/page.tsx` — Manager 完整迁移：用户卡片、周历、筛选 chip、订阅列表、FAB
+  - 日历：32px 圆角卡片 + shadow-xl，圆形蓝色导航按钮，选中日期缩放效果
+  - 续费卡片：大 emoji + 蓝色金额，独立灰色圆角卡片
+  - 空状态：虚线框
+  - Hydration warning 修复（mounted 状态）
+
+---
+
+## IN PROGRESS
+
+- 无
+
+---
+
+## NEXT
+
+**Web App 全部完成（8/8 页面）**
+- ✅ `/subscription/[id]` — SubscriptionDetailScreen
+- ✅ `/subscription/new` — AddSubscriptionScreen
+- ✅ `/settings` — SettingsScreen
+- ✅ `/report` — ReportScreen
+- ✅ `/audit` — AuditPage：4视图（home/chat/finalizing/report）、FSM全移植、Claude对话、评分报告、Alternatives modal
+- ✅ `/checkin` — CheckInPage：Framer Motion拖拽卡片、love/review/unsure flow、weekly gate、streak、session summary
+
+**Web App 遗留待改**
+- ✅ CheckIn 卡片大小需要改善 → 已改为 `aspect-ratio: 3/4` 固定比例
+- [ ] iOS PWA 键盘适配仍需真机验证（当前方案：visualViewport.height，可能需微调）
+
+**Mobile 遗留**
+- [ ] 加载骨架屏（工作量较大，建议独立 session）
+
+**Option B — Web App 转换**
+（详见下方 WEB APP MIGRATION 章节）
+
+---
+
+## WEB APP MIGRATION PLAN
+
+将 React Native 应用转为 Web App 的完整改动清单。
+
+### 框架 & 路由
+
+| 现在 | Web 替换 |
+|------|---------|
+| React Native | React + Vite 或 Next.js 14（App Router） |
+| React Navigation（Stack + Tab） | Next.js 路由 或 React Router v6 |
+| `useNavigation().navigate('Screen')` | `router.push('/screen')` 或 `<Link>` |
+| `useRoute().params` | `useParams()` 或 searchParams |
+
+**推荐：Next.js 14 App Router**，原因：SSR 对 SEO 友好，file-based routing 直接对应现有页面结构，API routes 可用于敏感操作。
+
+### 样式系统
+
+| 现在 | Web 替换 |
+|------|---------|
+| `StyleSheet.create({})` | Tailwind CSS（推荐）或 CSS Modules |
+| `colors/spacing/fontSize` tokens | 保留 tokens，转为 CSS variables 或 Tailwind config |
+| `View` / `Text` / `ScrollView` | `div` / `p,span` / `div overflow-y-auto` |
+| `Pressable` | `button` 或 `div onClick` |
+| `Animated` / `Reanimated` | Framer Motion 或 CSS transitions |
+| `SafeAreaView` | `padding-top: env(safe-area-inset-top)` |
+| `KeyboardAvoidingView` | 不需要（浏览器原生处理） |
+
+### 手势 & 交互
+
+| 现在 | Web 替换 |
+|------|---------|
+| `react-native-gesture-handler` Swipe | Framer Motion `drag` 或 自定义 mouse/touch handlers |
+| CheckIn 卡片滑动（核心功能） | Framer Motion `useMotionValue` + `drag="x"` — 这是最复杂的改动 |
+| `GestureDetector` / `PanGesture` | `onMouseDown/onTouchStart` + position tracking |
+
+### 通知
+
+| 现在 | Web 替换 |
+|------|---------|
+| `expo-notifications` | Web Push API（需要 Service Worker） |
+| `notificationScheduler.ts` | 重写为 Web Push + 后端 cron（Supabase Edge Functions） |
+| 本地 schedule | 移到服务端调度（用户不在时也能收到） |
+
+> ⚠️ Web Push 需要 VAPID keys，比移动端 push 复杂，MVP 可以先用邮件提醒代替
+
+### 存储
+
+| 现在 | Web 替换 |
+|------|---------|
+| `AsyncStorage` | `localStorage` 或 `sessionStorage` |
+| Supabase（已是 REST/JS SDK） | **无需改动** |
+
+### 截图分享
+
+| 现在 | Web 替换 |
+|------|---------|
+| `react-native-view-shot` + `expo-sharing` | `html2canvas` + `navigator.share()` 或直接下载 |
+
+### 不需要改动的部分
+- ✅ **Supabase** — JS SDK 浏览器端直接用
+- ✅ **Claude API 调用** — HTTP 请求，浏览器完全支持
+- ✅ **所有业务逻辑**（contexts、utils、types）— 纯 TypeScript，平台无关
+- ✅ **checkinLLM.ts / checkinSummary.ts / auditScorer.ts** — 无 RN 依赖
+- ✅ **Supabase schema** — 不动
+
+### 建议迁移顺序
+
+```
+1. 搭脚手架
+   Next.js 14 + TypeScript + Tailwind + Supabase JS SDK
+
+2. 迁移 Auth（最简单）
+   - AuthContext 逻辑几乎不变，Supabase Auth 在 web 完全支持
+   - 替换 AuthScreen 为 /login 页面
+
+3. 迁移 Manager（纯展示，无手势）
+   - 直接翻译 View/Text/StyleSheet → div/Tailwind
+   - 日历部分可用 react-calendar 替代
+
+4. 迁移 Settings、ReportScreen、AuditScreen
+   - 无手势，主要是样式转换
+   - AuditScreen 的 chat UI 在 web 更简单（原生 input/button）
+
+5. 迁移 CheckInScreen（最复杂）
+   - Swipe 卡片是核心交互，用 Framer Motion 重建
+   - 建议先做 web 版"点击选择"降级方案
+
+6. 通知系统
+   - 移动端先保留，web 版用 email 提醒（Supabase SMTP）
+```
+
+### 预估改动文件
+
+**需要完全重写（~40%代码）：**
+- 所有 `screens/*.tsx` — 去 RN 组件
+- `navigation/` — 换路由系统
+- `styles/` — StyleSheet → Tailwind config
+
+**需要小改（~10%代码）：**
+- `contexts/` — 去 `useFocusEffect` 等 RN hook
+- `utils/notificationScheduler.ts` — 换 Web Push
+
+**基本不动（~50%代码）：**
+- `utils/database.ts`
+- `utils/claude.ts` / `checkinLLM.ts` / `checkinSummary.ts` / `auditScorer.ts`
+- `types/index.ts`
+- Supabase schema
+
+---
+
+## BLOCKERS
+
+- 无
+
+---
+
+## NOTES
+
+- 样式系统：StyleSheet + `app/src/styles/tokens.ts`（不是NativeWind）
+- Claude API：通过 `app/src/utils/claude.ts` 和 `checkinLLM.ts` 封装
+- Supabase 项目：subscription-manager，Asia Southeast（Singapore）
+- `.env` 在 app/ 目录下，已有所有 key
+- Web 迁移时 Claude API key 不能暴露在前端，需要 Next.js API route 做代理

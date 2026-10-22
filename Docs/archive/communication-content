@@ -1,0 +1,982 @@
+
+我整体认可这版 plan/spec 已经非常接近 implementation-ready，但为了保证 **bounded-weight 稳定性** 和 **数据语义一致**，我认为有几个“必须修改”的点（不改会导致 double counting / gating 失效 / prompt自相矛盾）。请你按下面修改并给出对应的 plan patch（含替换后的代码段）。
+
+---
+
+# ✅ Must Fix 1: ObjectiveData 与 CheckIn 信号重复（double counting）
+
+当前实现里：
+- `feature_utilization` 用最近 3 次 CheckIn 的 `usage_satisfaction` 作为 proxy
+- 但 CheckIn 层本身又对 `usage_satisfaction`、`perceived_value` 计入 30% 权重
+
+这会导致同一信号在 Objective + CheckIn 被算两次，从而破坏权重上限（实际 CheckIn 权重被暗中放大）。
+
+## 修改要求（任选其一，推荐 A）：
+### A（推荐）：移除 feature_utilization
+- Objective 只保留“独立于 CheckIn”的 proxy（recency / affordability 等）
+- `feature_utilization` 不参与 finalScore
+
+### B：feature_utilization 改为用户手动标记（不是 checkin satisfaction）
+- 例如 `self_reported_utilization` = 0/0.33/0.66/1
+
+请你在 plan 里明确选择，并修改 `ObjectiveData` interface + `calculateObjectiveScore` 权重分配。
+
+---
+
+# ✅ Must Fix 2: half-life 公式不严格（文档语义与代码不一致）
+
+你目前写的是：
+`Math.exp(-age / halfLifeDays)`
+但这不是 half-life 实现。
+
+正确 half-life 需要满足：age = t_half 时 weight = 0.5，因此应使用：
+`Math.exp(-Math.log(2) * age / halfLifeDays)`
+
+## 修改要求：
+- 全文所有提到 “half-life” 的 decay（usage recency / checkin decay / behavioral decay）都统一改为该公式
+- 或者如果坚持 `exp(-age/k)`，请把文档术语从 half-life 改成 decay_constant，并重新解释参数含义（不建议）
+
+---
+
+# ✅ Must Fix 3: CheckIn prompt 自相矛盾（Ask questions vs JSON-only）
+
+目前 `CHECKIN_PROMPT` 要 Claude “Ask 2-3 structured questions”，但同时要求 “Return ONLY JSON. No prose.”  
+这会导致：要么用户看不到问题，要么输出违反 JSON-only。
+
+## 修改要求（推荐拆分为两步）：
+### Step 1: Claude 只生成问题（JSON）
+输出 schema 类似：
+```json
+{
+  "questions": [
+    { "id":"usage_satisfaction", "text":"...", "options":[{"label":"...", "score":0.0}, ...] },
+    { "id":"perceived_value", "text":"...", "options":[{"label":"...", "score":0.0}, ...] },
+    { "id":"decision_signal", "text":"...", "options":[{"label":"keep","value":"keep"}, ...] }
+  ]
+}
+Step 2: 用户回答后，本地 deterministic 计算 CheckInResponses
+不让 LLM 直接“给分”，只让它提供题目和选项映射（确保稳定、可控）。
+
+请你重写 CheckIn 相关 prompt 与流程，确保：
+
+UI 能展示问题
+
+LLM 输出仍为可解析 JSON
+
+scoring 在本地 deterministic
+
+✅ Must Fix 4: Confidence 输入数据源与类型错位 + 建议加入时间衰减
+你在 pipeline 里调用：
+
+calculateConfidenceScore(persona.episodic_memory, user.subscriptions, persona.setup_completed)
+但函数签名是：
+(checkInHistory: CheckInResponse[], subscriptionHistory: Subscription[], setupCompleted: boolean)
+episodic_memory 并不等同于 checkInHistory（类型/语义错位）。
+
+修改要求：
+明确数据结构（至少分开）：
+
+checkins[]
+
+behaviorEvents[]
+
+episodicMemory[]（文本/事件摘要）
+
+confidence 计算应基于：
+
+最近有效 checkin 数量（建议加 60 天衰减或窗口）
+
+可用行为事件数量
+
+setup 是否完成
+
+你写了 “confidence only increases (never decreases)” 这会导致用户行为改变后 gating 失灵。
+建议：
+
+使用 “effective_confidence”（随时间衰减）或允许小幅下降（带下限）
+
+请你更新：
+
+calculateConfidenceScore 的输入类型与调用位置
+
+增加时间窗口/衰减（至少对 checkin count）
+
+Deliverable Request
+请你基于以上 4 个 must-fix，输出：
+
+Plan 中对应章节的 patch（直接给替换后的 Markdown 段落）
+
+替换后的关键代码段（ObjectiveData / decay utility / checkin flow / confidence）
+
+说明新的权重是否仍符合 bounded-weight（给一个简单验证方式）
+
+目标：做到 “语义一致 + 不 double count + prompt 可执行 + gating 有效”。
+
+
+---
+
+你把这段发给他，它大概率会：
+- 直接给你修订后的代码片段
+- 重写 checkin prompt 和流程
+- 修正 decay 公式与文档术语
+- 把 objective/checkin 去重
+- 把 confidence 数据源拆清楚
+
+如果你想再狠一点（更像 code reviewer），我也可以把每个“修改后应该长什么样”的代码模板也写出来，让他只能照着填。
+
+
+Plan to implement                                                                                                                                                            │
+│                                                                                                                                                                              │
+│ Plan: Fix Stable Judgement System - 4 Critical Bugs + Weight Adjustments                                                                                                     │
+│                                                                                                                                                                              │
+│ Context                                                                                                                                                                      │
+│                                                                                                                                                                              │
+│ The Stable Judgement System Plan (Docs/2026-02-14-stable-judgement-system-plan.md) contains 4 critical technical bugs that will cause instability, double-counting, and      │
+│ incorrect behavior if implemented as-is. These bugs were identified through detailed review in Docs/communication-content:                                                   │
+│                                                                                                                                                                              │
+│ 1. Double Counting: feature_utilization uses CheckIn satisfaction signals, but CheckIn layer also counts them → same data counted twice, breaks bounded-weight architecture  │
+│ 2. Incorrect Half-Life Formula: Current exp(-age/k) is not a true half-life decay (at t=halfLife, weight≠0.5)                                                                │
+│ 3. Contradictory CheckIn Prompt: Asks LLM to "Ask questions" AND "Return ONLY JSON" → impossible, causes parsing failures                                                    │
+│ 4. Confidence Data Type Mismatch: episodic_memory ≠ CheckInResponse[], plus no time decay causes gating to fail                                                              │
+│                                                                                                                                                                              │
+│ Additionally, two global consistency issues need fixing:                                                                                                                     │
+│ - Weight table inconsistency: Section 4.1 still shows Objective=40% (should be 30% after removing feature_utilization)                                                       │
+│ - Misleading score examples: Cold-start/typical score calculations show >0.9 values using max scores → misleads readers to think all subscriptions default to "strong keep"  │
+│                                                                                                                                                                              │
+│ Why this matters: These bugs will cause:                                                                                                                                     │
+│ - Unstable scores (same input → different output)                                                                                                                            │
+│ - Persona influence exceeding design bounds (>10%)                                                                                                                           │
+│ - CheckIn UI breaking (can't display questions)                                                                                                                              │
+│ - Stale user data dominating fresh signals                                                                                                                                   │
+│ - Documentation contradicting implementation                                                                                                                                 │
+│                                                                                                                                                                              │
+│ Objectives                                                                                                                                                                   │
+│                                                                                                                                                                              │
+│ 1. Fix all 4 Must-Fix bugs with corrected formulas and logic                                                                                                                 │
+│ 2. Update Section 4.1 weight table to reflect Objective=30%                                                                                                                  │
+│ 3. Rewrite score examples to show realistic neutral-input scenarios, not max-bound edge cases                                                                                │
+│ 4. Maintain bounded-weight guarantees (total ≤100%, Big Five ≤10%, Behavioral ≤8%)                                                                                           │
+│ 5. Ensure all documentation is internally consistent (no conflicting numbers across sections)                                                                                │
+│                                                                                                                                                                              │
+│ Critical Files                                                                                                                                                               │
+│                                                                                                                                                                              │
+│ Primary file to modify:                                                                                                                                                      │
+│ - /Users/wanjiaruan/Desktop/sub/Docs/2026-02-14-stable-judgement-system-plan.md (1816 lines)                                                                                 │
+│                                                                                                                                                                              │
+│ Reference files (read-only for context):                                                                                                                                     │
+│ - /Users/wanjiaruan/Desktop/sub/Docs/2026-02-14-phase-2.5-persona-system-plan.md (related persona plan)                                                                      │
+│ - /Users/wanjiaruan/Desktop/sub/Docs/communication-content (detailed bug descriptions)                                                                                       │
+│                                                                                                                                                                              │
+│ Detailed Implementation Plan                                                                                                                                                 │
+│                                                                                                                                                                              │
+│ Step 1: Fix Double Counting (Must Fix 1)                                                                                                                                     │
+│                                                                                                                                                                              │
+│ Problem: Section 14.1.3 uses CheckIn satisfaction as proxy for feature_utilization, but Section 4.1 also includes CheckIn in final score → double counting.                  │
+│                                                                                                                                                                              │
+│ Solution: Remove feature_utilization entirely from Objective scoring.                                                                                                        │
+│                                                                                                                                                                              │
+│ Changes needed:                                                                                                                                                              │
+│                                                                                                                                                                              │
+│ 1.1 Update Section 14.1.3 (Line ~923)                                                                                                                                        │
+│                                                                                                                                                                              │
+│ Replace entire section with:                                                                                                                                                 │
+│ #### 14.1.3 Feature Utilization Score (REMOVED - Anti-Double-Counting)                                                                                                       │
+│                                                                                                                                                                              │
+│ **DECISION**: This metric has been **removed** from Objective scoring to prevent double-counting with CheckIn responses.                                                     │
+│                                                                                                                                                                              │
+│ **Rationale**:                                                                                                                                                               │
+│ - `usage_satisfaction` from CheckIn already captures feature utilization                                                                                                     │
+│ - Including it in both Objective (via proxy) and CheckIn layers violates bounded-weight constraints                                                                          │
+│ - Objective layer must contain **only independent signals** (not derived from CheckIn data)                                                                                  │
+│                                                                                                                                                                              │
+│ **Impact on weight distribution**:                                                                                                                                           │
+│ - Objective score: 40% → **30%** (feature_utilization 10% removed)                                                                                                           │
+│ - CheckIn: 30% (unchanged)                                                                                                                                                   │
+│ - Setup: 22.5% (unchanged)                                                                                                                                                   │
+│ - Behavioral: ≤8% (unchanged, capped)                                                                                                                                        │
+│ - Big Five: ≤8% (unchanged, capped)                                                                                                                                          │
+│ - **New total max**: 98.5% (within bounds ✅)                                                                                                                                │
+│                                                                                                                                                                              │
+│ 1.2 Update Section 14.1.4 - Combined Objective Score (Line ~956)                                                                                                             │
+│                                                                                                                                                                              │
+│ const calculateObjectiveScore = (                                                                                                                                            │
+│   subscription: Subscription,                                                                                                                                                │
+│   userBudget: number                                                                                                                                                         │
+│   // REMOVED: checkInHistory parameter (was causing double-counting)                                                                                                         │
+│ ): number => {                                                                                                                                                               │
+│   const usageFreq = calculateUsageFrequency(subscription);                                                                                                                   │
+│   const costEff = calculateCostEfficiency(subscription, userBudget);                                                                                                         │
+│                                                                                                                                                                              │
+│   // REMOVED: featureUtil calculation                                                                                                                                        │
+│   // const featureUtil = calculateFeatureUtilization(subscription, checkInHistory);                                                                                          │
+│                                                                                                                                                                              │
+│   // Weighted sum (reduced to 30% total)                                                                                                                                     │
+│   const objectiveScore = (                                                                                                                                                   │
+│     usageFreq * 0.15 +                                                                                                                                                       │
+│     costEff * 0.15                                                                                                                                                           │
+│     // REMOVED: featureUtil * 0.10                                                                                                                                           │
+│   );                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   return objectiveScore; // Range: 0-0.30 (reduced from 0-0.40)                                                                                                              │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ 1.3 Update Section 4.1 - Weight Table (Line ~154)                                                                                                                            │
+│                                                                                                                                                                              │
+│ Replace table with:                                                                                                                                                          │
+│ | Input Source | Weight | Role | Notes |                                                                                                                                     │
+│ |--------------|--------|------|-------|                                                                                                                                     │
+│ | **Objective Data** (usage, cost) | **30%** | Stability anchor | Reduced from 40% (removed feature_utilization) |                                                           │
+│ | **CheckIn Responses** | **30%** | Primary subjective signal | Unchanged |                                                                                                  │
+│ | **Setup Preferences** | **22.5%** | Baseline persona | Unchanged |                                                                                                         │
+│ | **Behavioral Patterns** | **≤8%** | Real behavior correction | Capped, confidence-gated |                                                                                  │
+│ | **Big Five Traits** | **≤8%** | Micro personalization only | Capped, confidence-gated |                                                                                    │
+│                                                                                                                                                                              │
+│ **Total maximum**: 98.5% (within acceptable bounds)                                                                                                                          │
+│                                                                                                                                                                              │
+│ **CRITICAL**: Objective and CheckIn layers must remain **independent** to prevent double-counting.                                                                           │
+│                                                                                                                                                                              │
+│ 1.4 Update all references to "35-40%" → "30%" throughout document                                                                                                            │
+│                                                                                                                                                                              │
+│ Search for:                                                                                                                                                                  │
+│ - Line ~152: "35–40%" in table → "30%"                                                                                                                                       │
+│ - Line ~182: "35-40%" in code comment → "30%"                                                                                                                                │
+│ - Line ~529: "35-40%" in code comment → "30%"                                                                                                                                │
+│ - Any other occurrences in Sections 4, 10, 14                                                                                                                                │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│ Step 2: Fix Half-Life Formula (Must Fix 2)                                                                                                                                   │
+│                                                                                                                                                                              │
+│ Problem: Current formula exp(-age/k) doesn't satisfy half-life definition (at t=k, weight≠0.5).                                                                              │
+│                                                                                                                                                                              │
+│ Solution: Use correct formula exp(-ln(2) * age / halfLife).                                                                                                                  │
+│                                                                                                                                                                              │
+│ Changes needed:                                                                                                                                                              │
+│                                                                                                                                                                              │
+│ 2.1 Add utility function at beginning of Section 14 (after line ~858)                                                                                                        │
+│                                                                                                                                                                              │
+│ // ============================================                                                                                                                              │
+│ // UTILITY: Proper Half-Life Decay Function                                                                                                                                  │
+│ // ============================================                                                                                                                              │
+│                                                                                                                                                                              │
+│ /**                                                                                                                                                                          │
+│  * Calculates exponential decay with true half-life semantics.                                                                                                               │
+│  * At t = halfLifeDays, returns exactly 0.5.                                                                                                                                 │
+│  *                                                                                                                                                                           │
+│  * @param ageInDays - Time elapsed since event                                                                                                                               │
+│  * @param halfLifeDays - Half-life parameter (time for 50% decay)                                                                                                            │
+│  * @returns Decay weight in range [0, 1]                                                                                                                                     │
+│  */                                                                                                                                                                          │
+│ const halfLifeDecay = (ageInDays: number, halfLifeDays: number): number => {                                                                                                 │
+│   return Math.exp(-Math.LN2 * ageInDays / halfLifeDays);                                                                                                                     │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ // Verification:                                                                                                                                                             │
+│ // halfLifeDecay(0, 30) = 1.0     ✅                                                                                                                                         │
+│ // halfLifeDecay(30, 30) = 0.5    ✅                                                                                                                                         │
+│ // halfLifeDecay(60, 30) = 0.25   ✅                                                                                                                                         │
+│ // halfLifeDecay(90, 30) = 0.125  ✅                                                                                                                                         │
+│                                                                                                                                                                              │
+│ 2.2 Update Section 14.1.1 - Usage Frequency (Line ~868)                                                                                                                      │
+│                                                                                                                                                                              │
+│ const calculateUsageFrequency = (subscription: Subscription): number => {                                                                                                    │
+│   const daysSinceLastUpdate = getDaysBetween(subscription.updated_at, new Date());                                                                                           │
+│   const daysSinceCreation = getDaysBetween(subscription.created_at, new Date());                                                                                             │
+│                                                                                                                                                                              │
+│   // CORRECTED: Proper 7-day half-life decay                                                                                                                                 │
+│   const recencyScore = halfLifeDecay(daysSinceLastUpdate, 7);                                                                                                                │
+│                                                                                                                                                                              │
+│   const maturityBonus = Math.min(daysSinceCreation / 30, 1.0) * 0.2;                                                                                                         │
+│   return Math.min(recencyScore + maturityBonus, 1.0);                                                                                                                        │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ 2.3 Update Section 14.7.1 - CheckIn Response Decay (Line ~1340)                                                                                                              │
+│                                                                                                                                                                              │
+│ const applyCheckInDecay = (                                                                                                                                                  │
+│   checkInHistory: CheckInResponse[],                                                                                                                                         │
+│   subscription: Subscription                                                                                                                                                 │
+│ ): number => {                                                                                                                                                               │
+│   const relevantCheckIns = checkInHistory.filter(                                                                                                                            │
+│     c => c.subscription_id === subscription.id                                                                                                                               │
+│   );                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   if (relevantCheckIns.length === 0) return 0.5;                                                                                                                             │
+│                                                                                                                                                                              │
+│   const now = new Date();                                                                                                                                                    │
+│   const halfLifeDays = 30;                                                                                                                                                   │
+│                                                                                                                                                                              │
+│   const weightedScores = relevantCheckIns.map(checkIn => {                                                                                                                   │
+│     const ageInDays = getDaysBetween(checkIn.created_at, now);                                                                                                               │
+│                                                                                                                                                                              │
+│     // CORRECTED: Proper half-life decay                                                                                                                                     │
+│     const decayWeight = halfLifeDecay(ageInDays, halfLifeDays);                                                                                                              │
+│                                                                                                                                                                              │
+│     const score = (checkIn.usage_satisfaction + checkIn.perceived_value) / 2;                                                                                                │
+│     return score * decayWeight;                                                                                                                                              │
+│   });                                                                                                                                                                        │
+│                                                                                                                                                                              │
+│   const totalWeight = relevantCheckIns.reduce((sum, checkIn) => {                                                                                                            │
+│     const ageInDays = getDaysBetween(checkIn.created_at, now);                                                                                                               │
+│     return sum + halfLifeDecay(ageInDays, halfLifeDays);                                                                                                                     │
+│   }, 0);                                                                                                                                                                     │
+│                                                                                                                                                                              │
+│   return weightedScores.reduce((a, b) => a + b, 0) / totalWeight;                                                                                                            │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ 2.4 Update Section 14.7.2 - Behavioral Data Decay (Line ~1388)                                                                                                               │
+│                                                                                                                                                                              │
+│ const applyBehavioralDecay = (                                                                                                                                               │
+│   behavioralHistory: BehavioralEvent[],                                                                                                                                      │
+│   halfLifeDays: number = 60                                                                                                                                                  │
+│ ): BehavioralPatterns => {                                                                                                                                                   │
+│   const now = new Date();                                                                                                                                                    │
+│                                                                                                                                                                              │
+│   const weightedEvents = behavioralHistory.map(event => {                                                                                                                    │
+│     const ageInDays = getDaysBetween(event.timestamp, now);                                                                                                                  │
+│     // CORRECTED: Proper half-life decay                                                                                                                                     │
+│     const weight = halfLifeDecay(ageInDays, halfLifeDays);                                                                                                                   │
+│     return { event, weight };                                                                                                                                                │
+│   });                                                                                                                                                                        │
+│                                                                                                                                                                              │
+│   // ... rest of calculation                                                                                                                                                 │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ 2.5 Add verification note to Section 14.7                                                                                                                                    │
+│                                                                                                                                                                              │
+│ **Verification of Half-Life Formula**:                                                                                                                                       │
+│ ```typescript                                                                                                                                                                │
+│ // Test at key time points                                                                                                                                                   │
+│ expect(halfLifeDecay(0, 30)).toBe(1.0);      // At t=0, no decay                                                                                                             │
+│ expect(halfLifeDecay(30, 30)).toBe(0.5);     // At t=halfLife, exactly 50%                                                                                                   │
+│ expect(halfLifeDecay(60, 30)).toBe(0.25);    // At 2x halfLife, 25%                                                                                                          │
+│ expect(halfLifeDecay(90, 30)).toBe(0.125);   // At 3x halfLife, 12.5%                                                                                                        │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ ### Step 3: Fix CheckIn Prompt Contradiction (Must Fix 3)                                                                                                                    │
+│                                                                                                                                                                              │
+│ **Problem**: Section 3.2 asks LLM to both "Ask questions" (needs text output) and "Return ONLY JSON" (no text allowed) → impossible.                                         │
+│                                                                                                                                                                              │
+│ **Solution**: Split into two-step process: (1) LLM generates question JSON, (2) User answers, app scores locally.                                                            │
+│                                                                                                                                                                              │
+│ **Changes needed**:                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ #### 3.1 Update Section 3.2 - Question Generation Rules (Line ~138)                                                                                                          │
+│ Replace entire section with:                                                                                                                                                 │
+│ ```markdown                                                                                                                                                                  │
+│ ### 3.2 Question Generation Rules for LLM (TWO-STEP PROCESS)                                                                                                                 │
+│                                                                                                                                                                              │
+│ **CRITICAL CHANGE**: Separate question generation from scoring to ensure:                                                                                                    │
+│ 1. ✅ User can see and answer questions (UI requirement)                                                                                                                     │
+│ 2. ✅ LLM output remains valid JSON (parsing requirement)                                                                                                                    │
+│ 3. ✅ Scoring is deterministic and stable (consistency requirement)                                                                                                          │
+│                                                                                                                                                                              │
+│ #### Step 1: LLM Generates Questions (JSON Output Only)                                                                                                                      │
+│                                                                                                                                                                              │
+│ Claude should:                                                                                                                                                               │
+│ ✅ Generate 2-3 structured questions with predefined options                                                                                                                 │
+│ ✅ Adapt question wording to persona tone (communication style)                                                                                                              │
+│ ✅ Stay within fixed evaluation dimensions (usage/value/decision)                                                                                                            │
+│ ✅ Return valid JSON matching strict schema                                                                                                                                  │
+│                                                                                                                                                                              │
+│ ❌ NOT provide scores directly (scoring happens in Step 2)                                                                                                                   │
+│ ❌ NOT ask open-ended questions outside dimensions                                                                                                                           │
+│ ❌ NOT include prose outside JSON structure                                                                                                                                  │
+│                                                                                                                                                                              │
+│ **Prompt Template**:                                                                                                                                                         │
+│ ```typescript                                                                                                                                                                │
+│ export const CHECKIN_QUESTION_GENERATION_PROMPT = (                                                                                                                          │
+│   subscription: Subscription,                                                                                                                                                │
+│   persona: SetupPreferences                                                                                                                                                  │
+│ ) => `                                                                                                                                                                       │
+│ Generate 2-3 structured check-in questions for this subscription.                                                                                                            │
+│                                                                                                                                                                              │
+│ SUBSCRIPTION INFO:                                                                                                                                                           │
+│ - Name: ${subscription.name}                                                                                                                                                 │
+│ - Cost: $${subscription.cost}/${subscription.billing_cycle}                                                                                                                  │
+│ - Category: ${subscription.category}                                                                                                                                         │
+│ - Last Renewal: ${subscription.next_renewal_date}                                                                                                                            │
+│                                                                                                                                                                              │
+│ USER PERSONA (for tone adaptation only):                                                                                                                                     │
+│ - Communication Style: ${persona.decision_style === 'quick' ? 'concise' : 'conversational'}                                                                                  │
+│ - Budget Tightness: ${persona.budget_tightness}                                                                                                                              │
+│ - Waste Tolerance: ${persona.waste_tolerance}                                                                                                                                │
+│                                                                                                                                                                              │
+│ REQUIRED DIMENSIONS (DO NOT change these):                                                                                                                                   │
+│ 1. usage_satisfaction - How satisfied with recent usage/engagement                                                                                                           │
+│ 2. perceived_value - Cost vs value alignment perception                                                                                                                      │
+│ 3. decision_signal - Keep, review, or cancel intent                                                                                                                          │
+│                                                                                                                                                                              │
+│ CRITICAL: Return ONLY valid JSON. No markdown. No prose outside JSON.                                                                                                        │
+│                                                                                                                                                                              │
+│ Schema:                                                                                                                                                                      │
+│ {                                                                                                                                                                            │
+│   "questions": [                                                                                                                                                             │
+│     {                                                                                                                                                                        │
+│       "id": "usage_satisfaction",                                                                                                                                            │
+│       "text": "Your personalized question text here",                                                                                                                        │
+│       "options": [                                                                                                                                                           │
+│         { "label": "Not satisfied at all", "score": 0.0 },                                                                                                                   │
+│         { "label": "Somewhat satisfied", "score": 0.3 },                                                                                                                     │
+│         { "label": "Moderately satisfied", "score": 0.5 },                                                                                                                   │
+│         { "label": "Very satisfied", "score": 0.7 },                                                                                                                         │
+│         { "label": "Extremely satisfied", "score": 1.0 }                                                                                                                     │
+│       ]                                                                                                                                                                      │
+│     },                                                                                                                                                                       │
+│     {                                                                                                                                                                        │
+│       "id": "perceived_value",                                                                                                                                               │
+│       "text": "Your personalized value question",                                                                                                                            │
+│       "options": [                                                                                                                                                           │
+│         { "label": "Not worth the cost", "score": 0.0 },                                                                                                                     │
+│         { "label": "Barely worth it", "score": 0.3 },                                                                                                                        │
+│         { "label": "Fair value", "score": 0.5 },                                                                                                                             │
+│         { "label": "Good value", "score": 0.7 },                                                                                                                             │
+│         { "label": "Excellent value", "score": 1.0 }                                                                                                                         │
+│       ]                                                                                                                                                                      │
+│     },                                                                                                                                                                       │
+│     {                                                                                                                                                                        │
+│       "id": "decision_signal",                                                                                                                                               │
+│       "text": "What would you like to do with this subscription?",                                                                                                           │
+│       "options": [                                                                                                                                                           │
+│         { "label": "Keep it active", "value": "keep" },                                                                                                                      │
+│         { "label": "Need to think about it", "value": "unsure" },                                                                                                            │
+│         { "label": "Cancel it", "value": "cancel" }                                                                                                                          │
+│       ]                                                                                                                                                                      │
+│     }                                                                                                                                                                        │
+│   ]                                                                                                                                                                          │
+│ }                                                                                                                                                                            │
+│                                                                                                                                                                              │
+│ Adapt question WORDING to persona, but keep structure and score mappings identical.                                                                                          │
+│ `;                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ Step 2: Local Deterministic Scoring (No LLM)                                                                                                                                 │
+│                                                                                                                                                                              │
+│ After user selects options, app calculates scores locally:                                                                                                                   │
+│                                                                                                                                                                              │
+│ interface CheckInAnswers {                                                                                                                                                   │
+│   usage_satisfaction: { label: string; score: number };                                                                                                                      │
+│   perceived_value: { label: string; score: number };                                                                                                                         │
+│   decision_signal: { label: string; value: 'keep' | 'unsure' | 'cancel' };                                                                                                   │
+│ }                                                                                                                                                                            │
+│                                                                                                                                                                              │
+│ const calculateCheckInScores = (answers: CheckInAnswers): CheckInResponses => {                                                                                              │
+│   return {                                                                                                                                                                   │
+│     usage_satisfaction: answers.usage_satisfaction.score, // 0-1                                                                                                             │
+│     perceived_value: answers.perceived_value.score,       // 0-1                                                                                                             │
+│     decision_signal: answers.decision_signal.value        // enum                                                                                                            │
+│   };                                                                                                                                                                         │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ Benefits of Two-Step Approach:                                                                                                                                               │
+│ - ✅ User sees personalized questions in UI                                                                                                                                  │
+│ - ✅ LLM output is always parseable JSON                                                                                                                                     │
+│ - ✅ Scoring is 100% deterministic (no LLM variance)                                                                                                                         │
+│ - ✅ Faster (no second LLM call for scoring)                                                                                                                                 │
+│ - ✅ Consistent across users (same answer → same score)                                                                                                                      │
+│                                                                                                                                                                              │
+│ #### 3.2 Update Section 10 - Implementation (add new code example)                                                                                                           │
+│ Add to Phase 4 CheckIn Screen Integration:                                                                                                                                   │
+│ ```typescript                                                                                                                                                                │
+│ // Step 1: Generate questions (LLM)                                                                                                                                          │
+│ const generateCheckInQuestions = async (                                                                                                                                     │
+│   subscription: Subscription,                                                                                                                                                │
+│   persona: SetupPreferences                                                                                                                                                  │
+│ ): Promise<CheckInQuestions> => {                                                                                                                                            │
+│   const response = await anthropic.messages.create({                                                                                                                         │
+│     model: 'claude-sonnet-4-20250514',                                                                                                                                       │
+│     max_tokens: 800,                                                                                                                                                         │
+│     messages: [{                                                                                                                                                             │
+│       role: 'user',                                                                                                                                                          │
+│       content: CHECKIN_QUESTION_GENERATION_PROMPT(subscription, persona)                                                                                                     │
+│     }]                                                                                                                                                                       │
+│   });                                                                                                                                                                        │
+│                                                                                                                                                                              │
+│   try {                                                                                                                                                                      │
+│     const parsed = JSON.parse(response.content[0].text);                                                                                                                     │
+│     validateQuestionSchema(parsed); // Throws if invalid                                                                                                                     │
+│     return parsed;                                                                                                                                                           │
+│   } catch (error) {                                                                                                                                                          │
+│     console.error('Question generation failed:', error);                                                                                                                     │
+│     return FALLBACK_QUESTIONS; // Predefined safe default                                                                                                                    │
+│   }                                                                                                                                                                          │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ // Step 2: User answers → deterministic local scoring (NO LLM)                                                                                                               │
+│ const handleCheckInComplete = (                                                                                                                                              │
+│   questions: CheckInQuestions,                                                                                                                                               │
+│   userAnswers: CheckInAnswers                                                                                                                                                │
+│ ): CheckInResponses => {                                                                                                                                                     │
+│   // Extract scores from user-selected options (deterministic)                                                                                                               │
+│   const scores = calculateCheckInScores(userAnswers);                                                                                                                        │
+│                                                                                                                                                                              │
+│   // Pass to judgement engine                                                                                                                                                │
+│   const result = calculateSubscriptionJudgement(                                                                                                                             │
+│     subscription,                                                                                                                                                            │
+│     objective,                                                                                                                                                               │
+│     scores, // Deterministic scores from local calculation                                                                                                                   │
+│     setup,                                                                                                                                                                   │
+│     behavioral,                                                                                                                                                              │
+│     bigFive                                                                                                                                                                  │
+│   );                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   return result;                                                                                                                                                             │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│ Step 4: Fix Confidence Data Type Mismatch (Must Fix 4)                                                                                                                       │
+│                                                                                                                                                                              │
+│ Problem: Section 14.4 calls calculateConfidenceScore(persona.episodic_memory, ...) but function expects CheckInResponse[] type. Also, confidence never decreases → stale     │
+│ personas break gating.                                                                                                                                                       │
+│                                                                                                                                                                              │
+│ Solution: (1) Separate data sources properly, (2) Add time-window filtering, (3) Add effective confidence with decay.                                                        │
+│                                                                                                                                                                              │
+│ Changes needed:                                                                                                                                                              │
+│                                                                                                                                                                              │
+│ 4.1 Update Section 14.4 - Confidence Score Calculation (Line ~1118)                                                                                                          │
+│                                                                                                                                                                              │
+│ Replace entire section with:                                                                                                                                                 │
+│ ### 14.4 Confidence Score Calculation (CORRECTED)                                                                                                                            │
+│                                                                                                                                                                              │
+│ **Problem with original implementation**:                                                                                                                                    │
+│ - Data type mismatch: `episodic_memory` (generic event log) ≠ `CheckInResponse[]` (typed check-in data)                                                                      │
+│ - No time decay: Old data weighted equally to fresh data → stale personas dominate                                                                                           │
+│ - Confidence only increases: User behavior changes ignored → gating becomes ineffective                                                                                      │
+│                                                                                                                                                                              │
+│ **Solution**:                                                                                                                                                                │
+│ 1. Properly separate data sources by type                                                                                                                                    │
+│ 2. Apply time windows (only count recent data)                                                                                                                               │
+│ 3. Add effective confidence with decay over inactivity                                                                                                                       │
+│                                                                                                                                                                              │
+│ #### Data Source Separation (Type Safety)                                                                                                                                    │
+│                                                                                                                                                                              │
+│ ```typescript                                                                                                                                                                │
+│ // WRONG (old approach):                                                                                                                                                     │
+│ calculateConfidenceScore(                                                                                                                                                    │
+│   persona.episodic_memory,        // Generic any[] - type unsafe                                                                                                             │
+│   user.subscriptions,                                                                                                                                                        │
+│   setupCompleted                                                                                                                                                             │
+│ )                                                                                                                                                                            │
+│                                                                                                                                                                              │
+│ // CORRECT (new approach):                                                                                                                                                   │
+│ interface ConfidenceInputs {                                                                                                                                                 │
+│   checkInHistory: CheckInResponse[];     // Typed check-in responses                                                                                                         │
+│   subscriptionHistory: Subscription[];   // Subscription records                                                                                                             │
+│   behavioralEvents: BehavioralEvent[];   // Behavioral signals                                                                                                               │
+│   setupCompleted: boolean;               // Setup completion flag                                                                                                            │
+│ }                                                                                                                                                                            │
+│                                                                                                                                                                              │
+│ calculateConfidenceScore(inputs: ConfidenceInputs): number                                                                                                                   │
+│                                                                                                                                                                              │
+│ Time-Windowed Confidence Calculation                                                                                                                                         │
+│                                                                                                                                                                              │
+│ const calculateConfidenceScore = (                                                                                                                                           │
+│   inputs: ConfidenceInputs,                                                                                                                                                  │
+│   timeWindowDays: number = 60 // Only count data within window                                                                                                               │
+│ ): number => {                                                                                                                                                               │
+│   let confidence = 0.0;                                                                                                                                                      │
+│   const now = new Date();                                                                                                                                                    │
+│                                                                                                                                                                              │
+│   // Base: Setup completed (+0.3)                                                                                                                                            │
+│   if (inputs.setupCompleted) {                                                                                                                                               │
+│     confidence += 0.3;                                                                                                                                                       │
+│   }                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│   // CheckIn data (with 60-day time window)                                                                                                                                  │
+│   const recentCheckIns = inputs.checkInHistory.filter(c => {                                                                                                                 │
+│     const ageInDays = getDaysBetween(c.created_at, now);                                                                                                                     │
+│     return ageInDays <= timeWindowDays;                                                                                                                                      │
+│   });                                                                                                                                                                        │
+│   const checkInContribution = Math.min(recentCheckIns.length / 10, 0.4);                                                                                                     │
+│   confidence += checkInContribution;                                                                                                                                         │
+│                                                                                                                                                                              │
+│   // Subscription history (lifetime count, no window)                                                                                                                        │
+│   const subsCount = inputs.subscriptionHistory.length;                                                                                                                       │
+│   const historyContribution = Math.min(subsCount / 20, 0.3);                                                                                                                 │
+│   confidence += historyContribution;                                                                                                                                         │
+│                                                                                                                                                                              │
+│   // Behavioral events (with 90-day window)                                                                                                                                  │
+│   const recentBehavior = inputs.behavioralEvents.filter(e => {                                                                                                               │
+│     const ageInDays = getDaysBetween(e.timestamp, now);                                                                                                                      │
+│     return ageInDays <= 90;                                                                                                                                                  │
+│   });                                                                                                                                                                        │
+│   const behaviorContribution = Math.min(recentBehavior.length / 15, 0.2);                                                                                                    │
+│   confidence += behaviorContribution;                                                                                                                                        │
+│                                                                                                                                                                              │
+│   return Math.min(confidence, 1.0);                                                                                                                                          │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ Rationale for Time Windows:                                                                                                                                                  │
+│ - CheckIn responses: 60-day window (user preferences change over ~2 months)                                                                                                  │
+│ - Behavioral events: 90-day window (behavior patterns shift slower than feelings)                                                                                            │
+│ - Subscription history: No window (lifetime count reflects overall experience depth)                                                                                         │
+│                                                                                                                                                                              │
+│ Effective Confidence with Decay                                                                                                                                              │
+│                                                                                                                                                                              │
+│ To prevent stale personas from breaking gating, introduce effective confidence that decays with inactivity:                                                                  │
+│                                                                                                                                                                              │
+│ const getEffectiveConfidence = (                                                                                                                                             │
+│   persona: UserPersona,                                                                                                                                                      │
+│   currentDate: Date = new Date()                                                                                                                                             │
+│ ): number => {                                                                                                                                                               │
+│   const baseConfidence = persona.confidence_score;                                                                                                                           │
+│   const daysSinceLastUpdate = getDaysBetween(persona.last_updated, currentDate);                                                                                             │
+│                                                                                                                                                                              │
+│   // Confidence decays if user stops engaging                                                                                                                                │
+│   // Half-life: 90 days (after 3 months inactive → 50% effective confidence)                                                                                                 │
+│   const decayFactor = halfLifeDecay(daysSinceLastUpdate, 90);                                                                                                                │
+│                                                                                                                                                                              │
+│   const effectiveConfidence = baseConfidence * decayFactor;                                                                                                                  │
+│                                                                                                                                                                              │
+│   // Lower bound: 0.2 (even stale personas retain minimal validity)                                                                                                          │
+│   return Math.max(effectiveConfidence, 0.2);                                                                                                                                 │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ Why Effective Confidence Matters:                                                                                                                                            │
+│ - Prevents stale personas (6 months old) from dominating fresh CheckIn signals                                                                                               │
+│ - Confidence can "decrease" through time decay (fixes gating issue)                                                                                                          │
+│ - Lower bound (0.2) prevents complete loss of persona value                                                                                                                  │
+│ - Encourages periodic re-engagement (CheckIns refresh confidence)                                                                                                            │
+│                                                                                                                                                                              │
+│ Integration into Judgement Pipeline                                                                                                                                          │
+│                                                                                                                                                                              │
+│ const calculateFinalJudgement = async (                                                                                                                                      │
+│   subscription: Subscription,                                                                                                                                                │
+│   user: User                                                                                                                                                                 │
+│ ): Promise<JudgementResult> => {                                                                                                                                             │
+│   const persona = await getPersona(user.id);                                                                                                                                 │
+│                                                                                                                                                                              │
+│   // CORRECTED: Properly typed data sources                                                                                                                                  │
+│   const confidenceInputs: ConfidenceInputs = {                                                                                                                               │
+│     checkInHistory: await getCheckInHistory(user.id),                                                                                                                        │
+│     subscriptionHistory: await getSubscriptionHistory(user.id),                                                                                                              │
+│     behavioralEvents: await getBehavioralEvents(user.id),                                                                                                                    │
+│     setupCompleted: persona.setup_completed                                                                                                                                  │
+│   };                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   // Base confidence with time windows                                                                                                                                       │
+│   const baseConfidence = calculateConfidenceScore(confidenceInputs, 60);                                                                                                     │
+│                                                                                                                                                                              │
+│   // Effective confidence with decay                                                                                                                                         │
+│   const effectiveConfidence = getEffectiveConfidence(persona);                                                                                                               │
+│                                                                                                                                                                              │
+│   // Use effective confidence for gating (decays over time)                                                                                                                  │
+│   const behavioralAdj = applyConfidenceGating(                                                                                                                               │
+│     calculateBehavioralAdjustment(user.id, user.subscriptions),                                                                                                              │
+│     effectiveConfidence,  // Uses decayed confidence                                                                                                                         │
+│     0.5                   // Minimum threshold                                                                                                                               │
+│   );                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   const bigFiveAdj = applyConfidenceGating(                                                                                                                                  │
+│     calculateBigFiveAdjustment(persona.big_five_traits, persona.setup_preferences),                                                                                          │
+│     effectiveConfidence,                                                                                                                                                     │
+│     0.5                                                                                                                                                                      │
+│   );                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   // ... rest of calculation                                                                                                                                                 │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ #### 4.2 Update Section 14.9 - Complete Pipeline (Line ~1568)                                                                                                                │
+│ Replace line calling confidence with:                                                                                                                                        │
+│ ```typescript                                                                                                                                                                │
+│ // OLD (incorrect):                                                                                                                                                          │
+│ // const confidence = calculateConfidenceScore(                                                                                                                              │
+│ //   persona.episodic_memory,                                                                                                                                                │
+│ //   user.subscriptions,                                                                                                                                                     │
+│ //   persona.setup_completed                                                                                                                                                 │
+│ // );                                                                                                                                                                        │
+│                                                                                                                                                                              │
+│ // NEW (corrected):                                                                                                                                                          │
+│ const confidenceInputs: ConfidenceInputs = {                                                                                                                                 │
+│   checkInHistory: await getCheckInHistory(user.id),                                                                                                                          │
+│   subscriptionHistory: user.subscriptions,                                                                                                                                   │
+│   behavioralEvents: await getBehavioralEvents(user.id),                                                                                                                      │
+│   setupCompleted: persona.setup_completed                                                                                                                                    │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ const baseConfidence = calculateConfidenceScore(confidenceInputs, 60);                                                                                                       │
+│ const effectiveConfidence = getEffectiveConfidence(persona);                                                                                                                 │
+│                                                                                                                                                                              │
+│ // Use effective confidence for gating                                                                                                                                       │
+│ const behavioralAdj = applyConfidenceGating(                                                                                                                                 │
+│   calculateBehavioralAdjustment(user.id, user.subscriptions),                                                                                                                │
+│   effectiveConfidence, // Decays over time                                                                                                                                   │
+│   0.5                                                                                                                                                                        │
+│ );                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ const bigFiveAdj = applyConfidenceGating(                                                                                                                                    │
+│   calculateBigFiveAdjustment(persona.big_five_traits, persona.setup_preferences),                                                                                            │
+│   effectiveConfidence, // Decays over time                                                                                                                                   │
+│   0.5                                                                                                                                                                        │
+│ );                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│ Step 5: Update Weight Table and References (Global Consistency)                                                                                                              │
+│                                                                                                                                                                              │
+│ Changes needed:                                                                                                                                                              │
+│                                                                                                                                                                              │
+│ 5.1 Update Section 4.1 - Final Score Composition (Line ~152)                                                                                                                 │
+│                                                                                                                                                                              │
+│ Already covered in Step 1.3 above. Verify table shows:                                                                                                                       │
+│ - Objective: 30% (reduced)                                                                                                                                                   │
+│ - CheckIn: 30%                                                                                                                                                               │
+│ - Setup: 22.5%                                                                                                                                                               │
+│ - Behavioral: ≤8%                                                                                                                                                            │
+│ - Big Five: ≤8%                                                                                                                                                              │
+│                                                                                                                                                                              │
+│ 5.2 Update Section 4.2 - Code Example (Line ~174)                                                                                                                            │
+│                                                                                                                                                                              │
+│ const calculateFinalScore = (                                                                                                                                                │
+│   objective: ObjectiveData,                                                                                                                                                  │
+│   checkin: CheckInResponses,                                                                                                                                                 │
+│   setup: SetupPreferences,                                                                                                                                                   │
+│   behavioral: BehavioralPatterns,                                                                                                                                            │
+│   bigFive: BigFiveTraits                                                                                                                                                     │
+│ ): number => {                                                                                                                                                               │
+│   // Base score from objective data (30% - REDUCED from 40%)                                                                                                                 │
+│   const objectiveScore = (                                                                                                                                                   │
+│     objective.usage_frequency * 0.15 +                                                                                                                                       │
+│     objective.cost_efficiency * 0.15                                                                                                                                         │
+│     // REMOVED: objective.feature_utilization * 0.10                                                                                                                         │
+│   );                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   // CheckIn contribution (30% - unchanged)                                                                                                                                  │
+│   const checkinScore = (                                                                                                                                                     │
+│     checkin.usage_satisfaction * 0.15 +                                                                                                                                      │
+│     checkin.perceived_value * 0.15                                                                                                                                           │
+│   );                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   // Setup preferences contribution (22.5% - unchanged)                                                                                                                      │
+│   const setupScore = calculateSetupContribution(setup) * 0.225;                                                                                                              │
+│                                                                                                                                                                              │
+│   // ... rest unchanged                                                                                                                                                      │
+│ };                                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ 5.3 Search and replace all "35-40%" or "40%" references                                                                                                                      │
+│                                                                                                                                                                              │
+│ Locations to update:                                                                                                                                                         │
+│ - Line ~152: Weight table (already fixed in 5.1)                                                                                                                             │
+│ - Line ~182: Code comment "35-40%" → "30%"                                                                                                                                   │
+│ - Line ~529: Code comment "35-40%" → "30%"                                                                                                                                   │
+│ - Any section mentioning "40% objective" → "30% objective"                                                                                                                   │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│ Step 6: Rewrite Score Examples (Fix Misleading High Scores)                                                                                                                  │
+│                                                                                                                                                                              │
+│ Problem: Current examples show cold-start=0.93, typical=0.97 by using max scores → misleads readers to think all subscriptions default to "strong keep".                     │
+│                                                                                                                                                                              │
+│ Solution: (1) Keep max-bound proof, (2) Add neutral-input example showing realistic ~0.5-0.6 scores.                                                                         │
+│                                                                                                                                                                              │
+│ Changes needed:                                                                                                                                                              │
+│                                                                                                                                                                              │
+│ 6.1 Add new section after Section 4.2 (after line ~216)                                                                                                                      │
+│                                                                                                                                                                              │
+│ ### 4.3 Weight Verification and Realistic Score Examples                                                                                                                     │
+│                                                                                                                                                                              │
+│ #### Upper Bound Proof (Edge Case)                                                                                                                                           │
+│                                                                                                                                                                              │
+│ Maximum possible score with all components at maximum:                                                                                                                       │
+│                                                                                                                                                                              │
+│ ```typescript                                                                                                                                                                │
+│ const maxPossibleScore =                                                                                                                                                     │
+│   0.30 +   // Objective (max: both usage_freq and cost_eff at 1.0)                                                                                                           │
+│   0.30 +   // CheckIn (max: both satisfaction and value at 1.0)                                                                                                              │
+│   0.225 +  // Setup (max: perfect alignment)                                                                                                                                 │
+│   0.08 +   // Behavioral (max cap)                                                                                                                                           │
+│   0.08;    // Big Five (max cap)                                                                                                                                             │
+│ // = 0.985 (98.5%)                                                                                                                                                           │
+│                                                                                                                                                                              │
+│ ✅ Upper bound verified: Total ≤ 100%                                                                                                                                        │
+│                                                                                                                                                                              │
+│ Neutral Input Example (Realistic Cold Start)                                                                                                                                 │
+│                                                                                                                                                                              │
+│ New user, neutral persona (all 0.5), mediocre subscription:                                                                                                                  │
+│                                                                                                                                                                              │
+│ Inputs:                                                                                                                                                                      │
+│ - Objective: usage_freq=0.5, cost_eff=0.5                                                                                                                                    │
+│ - CheckIn: satisfaction=0.5, value=0.5                                                                                                                                       │
+│ - Setup: all preferences=0.5 (neutral)                                                                                                                                       │
+│ - Behavioral: 0 (no data, confidence-gated to 0)                                                                                                                             │
+│ - Big Five: all traits=0.5 (neutral, gated to ~0.02)                                                                                                                         │
+│ - Confidence: 0.3 (setup only, low data)                                                                                                                                     │
+│                                                                                                                                                                              │
+│ Calculation:                                                                                                                                                                 │
+│ const objectiveScore = 0.5 * 0.15 + 0.5 * 0.15 = 0.15;                                                                                                                       │
+│ const checkinScore = 0.5 * 0.15 + 0.5 * 0.15 = 0.15;                                                                                                                         │
+│ const setupScore = 0.5 * 0.225 = 0.1125;                                                                                                                                     │
+│ const behavioralAdj = 0.0 * (0.3 / 0.5) = 0.0; // Gated to zero                                                                                                              │
+│ const bigFiveAdj = 0.04 * (0.3 / 0.5) = 0.024; // Small adjustment                                                                                                           │
+│                                                                                                                                                                              │
+│ const neutralScore = 0.15 + 0.15 + 0.1125 + 0.0 + 0.024 = 0.4365;                                                                                                            │
+│                                                                                                                                                                              │
+│ Result: 0.44 → "Review" recommendation (not auto-keep)                                                                                                                       │
+│                                                                                                                                                                              │
+│ ✅ Realistic behavior: Neutral inputs produce neutral scores, not inflated "keep" recommendations.                                                                           │
+│                                                                                                                                                                              │
+│ Established User Example (High Confidence)                                                                                                                                   │
+│                                                                                                                                                                              │
+│ User with 10 CheckIns, clear preferences, good subscription fit:                                                                                                             │
+│                                                                                                                                                                              │
+│ Inputs:                                                                                                                                                                      │
+│ - Objective: usage_freq=0.7, cost_eff=0.8                                                                                                                                    │
+│ - CheckIn: satisfaction=0.8, value=0.7                                                                                                                                       │
+│ - Setup: quality_pref=0.9, waste_tolerance=0.3 (cautious user)                                                                                                               │
+│ - Behavioral: matches setup (small +0.02 adjustment)                                                                                                                         │
+│ - Big Five: conscientiousness=0.7 (slight +0.03 adjustment)                                                                                                                  │
+│ - Confidence: 0.8 (established user)                                                                                                                                         │
+│                                                                                                                                                                              │
+│ Calculation:                                                                                                                                                                 │
+│ const objectiveScore = 0.7 * 0.15 + 0.8 * 0.15 = 0.225;                                                                                                                      │
+│ const checkinScore = 0.8 * 0.15 + 0.7 * 0.15 = 0.225;                                                                                                                        │
+│ const setupScore = 0.85 * 0.225 = 0.191; // High alignment                                                                                                                   │
+│ const behavioralAdj = 0.02; // Small positive                                                                                                                                │
+│ const bigFiveAdj = 0.03; // Small positive                                                                                                                                   │
+│                                                                                                                                                                              │
+│ const establishedScore = 0.225 + 0.225 + 0.191 + 0.02 + 0.03 = 0.691;                                                                                                        │
+│                                                                                                                                                                              │
+│ Result: 0.69 → "Keep" recommendation (just below 0.7 threshold)                                                                                                              │
+│                                                                                                                                                                              │
+│ ✅ Realistic behavior: Good fit produces high score, but not artificially inflated.                                                                                          │
+│                                                                                                                                                                              │
+│ Summary of Score Ranges                                                                                                                                                      │
+│                                                                                                                                                                              │
+│ ┌────────────────────┬─────────────┬────────────────────┬──────────────────────────────────────────────────────────┐                                                         │
+│ │      Scenario      │ Score Range │   Recommendation   │                          Notes                           │                                                         │
+│ ├────────────────────┼─────────────┼────────────────────┼──────────────────────────────────────────────────────────┤                                                         │
+│ │ Neutral cold start │ 0.40 - 0.50 │ Review             │ Default for new users, mediocre fit                      │                                                         │
+│ ├────────────────────┼─────────────┼────────────────────┼──────────────────────────────────────────────────────────┤                                                         │
+│ │ Poor fit           │ 0.20 - 0.40 │ Cancel             │ Low usage, high cost, misaligned preferences             │                                                         │
+│ ├────────────────────┼─────────────┼────────────────────┼──────────────────────────────────────────────────────────┤                                                         │
+│ │ Moderate fit       │ 0.50 - 0.70 │ Review/Keep border │ Depends on confidence and recent signals                 │                                                         │
+│ ├────────────────────┼─────────────┼────────────────────┼──────────────────────────────────────────────────────────┤                                                         │
+│ │ Good fit           │ 0.70 - 0.85 │ Keep               │ High satisfaction, good value, aligned preferences       │                                                         │
+│ ├────────────────────┼─────────────┼────────────────────┼──────────────────────────────────────────────────────────┤                                                         │
+│ │ Excellent fit      │ 0.85 - 0.98 │ Keep               │ Rare, requires near-perfect alignment across all signals │                                                         │
+│ └────────────────────┴─────────────┴────────────────────┴──────────────────────────────────────────────────────────┘                                                         │
+│                                                                                                                                                                              │
+│ Key Insight: Most subscriptions will score in the 0.4-0.7 range, NOT clustered at 0.9+. This prevents auto-keep bias and surfaces genuine review opportunities.              │
+│                                                                                                                                                                              │
+│ #### 6.2 Remove or relocate old misleading examples                                                                                                                          │
+│ Search for any sections showing:                                                                                                                                             │
+│ - "coldStartScore = 0.93" or similar high cold-start values                                                                                                                  │
+│ - "typicalScore = 0.97" or similar inflated typical values                                                                                                                   │
+│                                                                                                                                                                              │
+│ Either remove them or clearly label as "MAX BOUND PROOF ONLY (not realistic scores)".                                                                                        │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ ## Testing & Verification                                                                                                                                                    │
+│                                                                                                                                                                              │
+│ ### Test 1: Double Counting Eliminated                                                                                                                                       │
+│ ```typescript                                                                                                                                                                │
+│ test('CheckIn signal not counted twice', () => {                                                                                                                             │
+│   const subscription = { /* ... */ };                                                                                                                                        │
+│   const checkIn = { usage_satisfaction: 0.8, perceived_value: 0.7 };                                                                                                         │
+│                                                                                                                                                                              │
+│   // Calculate objective (should NOT use checkIn data)                                                                                                                       │
+│   const objective = calculateObjectiveScore(subscription, 100);                                                                                                              │
+│                                                                                                                                                                              │
+│   // Modify checkIn, verify objective unchanged                                                                                                                              │
+│   const modifiedCheckIn = { usage_satisfaction: 0.2, perceived_value: 0.3 };                                                                                                 │
+│   const objectiveAfter = calculateObjectiveScore(subscription, 100);                                                                                                         │
+│                                                                                                                                                                              │
+│   expect(objective).toBe(objectiveAfter); // ✅ No double counting                                                                                                           │
+│ });                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ Test 2: Half-Life Formula Correct                                                                                                                                            │
+│                                                                                                                                                                              │
+│ test('Half-life decay at t=halfLife equals 0.5', () => {                                                                                                                     │
+│   expect(halfLifeDecay(30, 30)).toBe(0.5); // ✅                                                                                                                             │
+│   expect(halfLifeDecay(0, 30)).toBe(1.0);                                                                                                                                    │
+│   expect(halfLifeDecay(60, 30)).toBe(0.25);                                                                                                                                  │
+│ });                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ Test 3: CheckIn Questions Displayable                                                                                                                                        │
+│                                                                                                                                                                              │
+│ test('LLM generates valid question JSON', async () => {                                                                                                                      │
+│   const result = await generateCheckInQuestions(subscription, persona);                                                                                                      │
+│                                                                                                                                                                              │
+│   expect(result.questions).toHaveLength(3);                                                                                                                                  │
+│   expect(result.questions[0].id).toBe('usage_satisfaction');                                                                                                                 │
+│   expect(result.questions[0].options[0].score).toBeGreaterThanOrEqual(0);                                                                                                    │
+│                                                                                                                                                                              │
+│   // User can see questions in UI                                                                                                                                            │
+│   expect(result.questions[0].text).toBeTruthy();                                                                                                                             │
+│ });                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ test('Scoring is deterministic without LLM', () => {                                                                                                                         │
+│   const answers = { usage_satisfaction: { score: 0.7 }, /* ... */ };                                                                                                         │
+│                                                                                                                                                                              │
+│   const score1 = calculateCheckInScores(answers);                                                                                                                            │
+│   const score2 = calculateCheckInScores(answers);                                                                                                                            │
+│                                                                                                                                                                              │
+│   expect(score1).toEqual(score2); // ✅ Deterministic                                                                                                                        │
+│ });                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ Test 4: Confidence Decays Over Time                                                                                                                                          │
+│                                                                                                                                                                              │
+│ test('Effective confidence decreases with inactivity', () => {                                                                                                               │
+│   const persona = {                                                                                                                                                          │
+│     confidence_score: 0.8,                                                                                                                                                   │
+│     last_updated: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) // 90 days ago                                                                                             │
+│   };                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   const effective = getEffectiveConfidence(persona);                                                                                                                         │
+│                                                                                                                                                                              │
+│   expect(effective).toBeLessThan(0.8); // ✅ Decayed                                                                                                                         │
+│   expect(effective).toBeCloseTo(0.4); // 0.8 * 0.5 (half-life)                                                                                                               │
+│   expect(effective).toBeGreaterThanOrEqual(0.2); // Lower bound                                                                                                              │
+│ });                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ Test 5: Bounded Weights                                                                                                                                                      │
+│                                                                                                                                                                              │
+│ test('All components within design bounds', () => {                                                                                                                          │
+│   const result = calculateFinalJudgement(/* extreme inputs */);                                                                                                              │
+│                                                                                                                                                                              │
+│   expect(result.breakdown.objective_contribution).toBeLessThanOrEqual(0.30);                                                                                                 │
+│   expect(result.breakdown.checkin_contribution).toBeLessThanOrEqual(0.30);                                                                                                   │
+│   expect(result.breakdown.setup_contribution).toBeLessThanOrEqual(0.225);                                                                                                    │
+│   expect(result.breakdown.behavioral_adjustment).toBeLessThanOrEqual(0.08);                                                                                                  │
+│   expect(result.breakdown.bigfive_adjustment).toBeLessThanOrEqual(0.08);                                                                                                     │
+│   expect(result.final_score).toBeLessThanOrEqual(1.0);                                                                                                                       │
+│ });                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ Test 6: Neutral Inputs Produce Neutral Scores                                                                                                                                │
+│                                                                                                                                                                              │
+│ test('Neutral persona produces review recommendation, not auto-keep', () => {                                                                                                │
+│   const neutralInputs = {                                                                                                                                                    │
+│     objective: { usage_frequency: 0.5, cost_efficiency: 0.5 },                                                                                                               │
+│     checkin: { usage_satisfaction: 0.5, perceived_value: 0.5 },                                                                                                              │
+│     setup: { /* all 0.5 */ },                                                                                                                                                │
+│     behavioral: { adjustment: 0 },                                                                                                                                           │
+│     bigFive: { /* all 0.5 */ }                                                                                                                                               │
+│   };                                                                                                                                                                         │
+│                                                                                                                                                                              │
+│   const result = calculateFinalJudgement(neutralInputs);                                                                                                                     │
+│                                                                                                                                                                              │
+│   expect(result.final_score).toBeGreaterThan(0.4);                                                                                                                           │
+│   expect(result.final_score).toBeLessThan(0.6);                                                                                                                              │
+│   expect(result.recommendation).toBe('review'); // Not 'keep'                                                                                                                │
+│ });                                                                                                                                                                          │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│ Success Criteria                                                                                                                                                             │
+│                                                                                                                                                                              │
+│ 1. ✅ All 4 Must-Fix bugs corrected with proper formulas                                                                                                                     │
+│ 2. ✅ Section 4.1 weight table shows Objective=30%                                                                                                                           │
+│ 3. ✅ All "35-40%" or "40% objective" references updated to "30%"                                                                                                            │
+│ 4. ✅ Score examples show realistic neutral-input scenarios (~0.4-0.6)                                                                                                       │
+│ 5. ✅ No contradictions between sections (weights, formulas, descriptions)                                                                                                   │
+│ 6. ✅ Bounded-weight guarantees maintained (total ≤100%, Big Five ≤10%)                                                                                                      │
+│ 7. ✅ All TypeScript code examples compile without type errors                                                                                                               │
+│ 8. ✅ Documentation is implementation-ready (no ambiguity)                                                                                                                   │
+│                                                                                                                                                                              │
+│ Rollout Notes                                                                                                                                                                │
+│                                                                                                                                                                              │
+│ Phase 1: Fix document first (this plan)                                                                                                                                      │
+│ Phase 2: Update corresponding TypeScript implementation files to match corrected plan                                                                                        │
+│ Phase 3: Add unit tests to verify bounded weights and decay formulas                                                                                                         │
+│ Phase 4: Deploy and monitor for score stability                                                                                                                              │
+│                                                                                                                                                                              │
+│ Risk: This is a documentation fix only. Code implementation must follow in Phase 2 to take effect.                                                                           │
+│                                                                                                                                                                              │
+│ ---                                                                                                                                                                          │
+│ End of Plan  

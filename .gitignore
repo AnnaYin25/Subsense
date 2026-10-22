@@ -1,0 +1,6 @@
+.DS_Store
+firebase-debug.log
+tmp/
+output/
+setup.mp4
+app/supabase/.temp/

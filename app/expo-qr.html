@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expo 连接二维码</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; padding: 24px; max-width: 400px; margin: 0 auto; }
+    h1 { font-size: 18px; }
+    p { color: #666; font-size: 14px; }
+    input { width: 100%; padding: 10px; font-size: 14px; margin: 12px 0; box-sizing: border-box; }
+    img { display: block; margin: 16px auto; }
+    .hint { font-size: 12px; color: #999; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Expo 连接二维码</h1>
+  <p>在手机 Expo Go 中扫描此二维码（手机需与电脑同一 WiFi）</p>
+  <input type="text" id="url" value="exp://192.168.1.67:8081" placeholder="exp://你的电脑IP:8081" />
+  <p class="hint">请将 192.168.1.1 换成你电脑的局域网 IP（系统设置→网络 可查看）</p>
+  <img id="qr" src="" alt="QR Code" width="280" height="280" />
+  <script>
+    const input = document.getElementById('url');
+    const img = document.getElementById('qr');
+    function updateQR() {
+      const url = input.value.trim() || 'exp://192.168.1.1:8081';
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + encodeURIComponent(url);
+    img.alt = url;
+    }
+    input.addEventListener('input', updateQR);
+    updateQR();
+  </script>
+</body>
+</html>
