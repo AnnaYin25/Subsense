@@ -1,0 +1,665 @@
+{
+  "datasetName": "benchmark_personas_v2",
+  "description": "15-persona benchmark. P001-P010 from v1 with subscriberType ID fixes and score corrections (P005: 56→60, P007: 64→68, P009: 72→57). P011-P015 new personas with full simulated responses.",
+  "badge_thresholds": {
+    "Subscribe Now": "≥75",
+    "Start Trial": "≥60",
+    "Watchlist": "≥45",
+    "Alternatives": "<45"
+  },
+  "scoreTierDef": {
+    "high": "8–10",
+    "mid": "5–7",
+    "low": "0–4"
+  },
+  "personas": [
+    {
+      "id": "P001",
+      "importCtx": {
+        "name": "Xiaoya",
+        "budget": 120,
+        "priceSensitivity": 0.7,
+        "existingSubs": "Netflix ($15.99/mo), Disney+ ($7.99/mo), Bilibili ($3.50/mo)",
+        "sameCatSubs": "Netflix, Disney+",
+        "interestTags": ["video"],
+        "subscriberType": "power_user",
+        "personaAlignment": 1.3,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 2,
+        "sameCatAvgUsage": 0.85,
+        "checkinSat": "high",
+        "usageTrend": "stable"
+      },
+      "personaCard": {
+        "title": "剧荒焦虑症患者",
+        "background": "28岁，上海互联网公司运营。下班后的主要娱乐就是追剧，生活上节省，但在追剧上愿意花钱。",
+        "auditService": { "name": "HBO Max", "price": 15.99, "category": "video" },
+        "speechStyle": "enthusiastic / fangirl",
+        "typicalPhrases": ["最近真的好多剧要看", "这个剧别的平台没有", "我大概率会追完"],
+        "decisionVibe": "content-driven but budget-aware",
+        "simulatedUserResponses": {
+          "motivation": "最近几部新剧都在 HBO，其他平台看不到，我会很想追。",
+          "expected_usage": "应该会经常看，至少一周四五次。",
+          "budget_feel": "有点贵，但如果内容够值我会留。",
+          "overlap": "我知道我已经有 Netflix 和 Disney+，但它们片单不一样。",
+          "risk": "我主要担心的是一时上头，后面看完剧就停了。"
+        },
+        "expectedScores": { "needFit": 10, "usage": 9, "budget": 6, "overlap": 6, "risk": 7, "final": 76 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "Motivation is scenario_specific（'这个剧别的平台看不到'），内容唯一性驱动，PAC=1.3 video power user 强匹配，满分区间。" },
+          "usage":    { "tier": "high", "reason": "'一周四五次' = most_days，且已有视频订阅 avgUsage=0.85 证明她真实高频使用，执行力有据可查。" },
+          "budget":   { "tier": "mid",  "reason": "'有点贵' = tight feel，$15.99 约占 $120 预算 13.3%，接近高占比惩罚线，预算感是此 persona 的主要摩擦点。" },
+          "overlap":  { "tier": "mid",  "reason": "Netflix + Disney+ 是同类但片单不同，用户自己明确区分内容差异，判定为 some overlap 而非 significant。" },
+          "risk":     { "tier": "mid",  "reason": "'一时上头后面停了' = forget_cancel/interest_decay，但高 avgUsage=0.85 的历史行为降低了这个风险的可信度。" }
+        },
+        "badge": "Subscribe Now",
+        "expectedReasoning": "高度匹配视频兴趣且已有订阅使用率高，不像囤积型用户；但已有两个视频订阅，新增服务边际价值略受影响。"
+      }
+    },
+    {
+      "id": "P002",
+      "importCtx": {
+        "name": "Kevin",
+        "budget": 200,
+        "priceSensitivity": 0.3,
+        "existingSubs": "Notion AI ($10/mo), Todoist ($4/mo), Readwise ($8/mo), Superhuman ($30/mo)",
+        "sameCatSubs": "Notion, Todoist",
+        "interestTags": ["productivity"],
+        "subscriberType": "explorer",
+        "personaAlignment": 1.2,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 2,
+        "sameCatAvgUsage": 0.3,
+        "checkinSat": "medium",
+        "usageTrend": "declining"
+      },
+      "personaCard": {
+        "title": "效率工具囤积者",
+        "background": "32岁，旧金山产品经理，喜欢尝试新 productivity apps，但真正长期使用的通常只有一两个。",
+        "auditService": { "name": "Capacities", "price": 9.99, "category": "productivity" },
+        "speechStyle": "analytical",
+        "typicalPhrases": ["workflow", "my stack", "maybe this fits my system"],
+        "decisionVibe": "rational but experimental",
+        "simulatedUserResponses": {
+          "motivation": "我想看看它能不能把笔记、知识库和任务更好地串起来。",
+          "expected_usage": "刚开始应该会多用，但长期不一定。",
+          "budget_feel": "价格不算问题。",
+          "overlap": "和 Notion 确实有点像，但它的对象模型看起来更高级。",
+          "risk": "我之前也订过一些后来没坚持用的工具。"
+        },
+        "expectedScores": { "needFit": 8, "usage": 4, "budget": 8, "overlap": 3, "risk": 3, "final": 52 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "Problem_aware（串联笔记/知识库/任务是明确痛点），PAC=1.2 explorer 匹配，但不是 scenario_specific，未到满分。" },
+          "usage":    { "tier": "low",  "reason": "'刚开始多用，长期不一定' 直接承认不稳定，declining trend 背景下预测为 weekly 或更低，low tier 核心证据。" },
+          "budget":   { "tier": "high", "reason": "'价格不算问题' = comfortable，$9.99 仅占 $200 预算 5%，完全无压力。" },
+          "overlap":  { "tier": "low",  "reason": "Notion + Todoist 是直接竞品，sameCatAvgUsage=0.3 说明他连现有工具都没充分使用，重叠风险被放大。" },
+          "risk":     { "tier": "low",  "reason": "自述有历史 forget_cancel 记录，declining trend + explorer 型 = 高概率复现，风险评级最低区间。" }
+        },
+        "badge": "Watchlist",
+        "expectedReasoning": "同类效率工具已较多且平均使用率低，明显存在堆叠和替代问题，新订阅高概率成为闲置工具。"
+      }
+    },
+    {
+      "id": "P003",
+      "importCtx": {
+        "name": "Lena",
+        "budget": 150,
+        "priceSensitivity": 0.5,
+        "existingSubs": "Spotify ($10/mo), Canva Pro ($13/mo), Duolingo ($7/mo), Calm ($12/mo), Skillshare ($14/mo)",
+        "sameCatSubs": "Skillshare",
+        "interestTags": ["learning", "creative"],
+        "subscriberType": "spontaneous",
+        "personaAlignment": 1.0,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 1,
+        "sameCatAvgUsage": 0.2,
+        "checkinSat": "low",
+        "usageTrend": "declining"
+      },
+      "personaCard": {
+        "title": "冲动订阅者",
+        "background": "25岁，洛杉矶自由设计师，看到推荐就想订阅，但常常几周后就不用了。",
+        "auditService": { "name": "Masterclass", "price": 15.0, "category": "learning" },
+        "speechStyle": "casual / impulsive",
+        "typicalPhrases": ["感觉挺酷的", "先试试看吧", "也许会用"],
+        "decisionVibe": "emotion-first",
+        "simulatedUserResponses": {
+          "motivation": "我看到好几个名人课程，感觉很有启发。",
+          "expected_usage": "可能先看几节吧，后面看有没有时间。",
+          "budget_feel": "还行，不算特别贵。",
+          "overlap": "Skillshare我其实也没怎么学完。",
+          "risk": "我最大的可能就是热情过去了。"
+        },
+        "expectedScores": { "needFit": 6, "usage": 3, "budget": 7, "overlap": 5, "risk": 2, "final": 46 },
+        "scoreRationale": {
+          "needFit":  { "tier": "mid",  "reason": "'名人课程感觉有启发' = category_only，没有具体场景或痛点，spontaneous type PAC=1.0 无提升，mid 区间下沿。" },
+          "usage":    { "tier": "low",  "reason": "'先看几节，后面看有没有时间' = 自己预测低频，spontaneous + declining 背景下实际使用率接近 rarely。" },
+          "budget":   { "tier": "mid",  "reason": "'还行' = comfortable，$15 占 $150 预算 10%，不算压力，mid 区间中段。" },
+          "overlap":  { "tier": "mid",  "reason": "Skillshare 是直接重叠，但她自己说没学完（sameCatAvgUsage=0.2），说明问题更在于使用习惯而非内容差异。" },
+          "risk":     { "tier": "low",  "reason": "'热情过去了' = interest_decay，combined with 历史冲动订阅模式 + low checkinSat，是整个 benchmark 风险最高的 persona 之一。" }
+        },
+        "badge": "Watchlist",
+        "expectedReasoning": "用户的核心风险来自冲动订阅和历史低使用，虽然学习内容看起来有吸引力，但保留概率不高。"
+      }
+    },
+    {
+      "id": "P004",
+      "importCtx": {
+        "name": "Marcus",
+        "budget": 180,
+        "priceSensitivity": 0.4,
+        "existingSubs": "Strava ($7/mo), Apple Fitness+ ($9.99/mo)",
+        "sameCatSubs": "Strava, Apple Fitness+",
+        "interestTags": ["fitness"],
+        "subscriberType": "power_user",
+        "personaAlignment": 1.25,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 2,
+        "sameCatAvgUsage": 0.9,
+        "checkinSat": "high",
+        "usageTrend": "increasing"
+      },
+      "personaCard": {
+        "title": "健身狂热者",
+        "background": "34岁，纽约咨询顾问，每天运动并记录训练数据。",
+        "auditService": { "name": "Peloton App", "price": 12.99, "category": "fitness" },
+        "speechStyle": "energetic",
+        "typicalPhrases": ["I train every day", "如果对训练有帮助我会用"],
+        "decisionVibe": "performance-driven",
+        "simulatedUserResponses": {
+          "motivation": "如果课程和数据反馈更强，我会认真用。",
+          "expected_usage": "大概率几乎每天。",
+          "budget_feel": "价格可以接受。",
+          "budget_feel": "价格可以接受。",
+          "overlap": "和 Apple Fitness+ 有点重，但我会比较内容质量。",
+          "risk": "如果没明显提升，我不会长期留。"
+        },
+        "expectedScores": { "needFit": 9, "usage": 9, "budget": 8, "overlap": 5, "risk": 7, "final": 76 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "'课程和数据反馈更强' = problem_aware 偏 scenario_specific，PAC=1.25 fitness power user 强匹配，increasing trend 进一步背书。" },
+          "usage":    { "tier": "high", "reason": "'几乎每天' = daily，且 avgUsage=0.9 的现有健身订阅证明执行力不是问题，可信度高。" },
+          "budget":   { "tier": "high", "reason": "'价格可以接受' = comfortable，$12.99 约占 $180 的 7.2%，比例合理，无压力。" },
+          "overlap":  { "tier": "mid",  "reason": "Apple Fitness+ 是同类，但用户主动提出会'比较内容质量'，且 avgUsage=0.9 说明他有充分使用每个订阅的能力。" },
+          "risk":     { "tier": "mid",  "reason": "'没明显提升不会留' = interest_decay，偏理性判断而非冲动，strong usage habit 降低了这个风险实际触发的概率。" }
+        },
+        "badge": "Subscribe Now",
+        "expectedReasoning": "用户健身频率高且同类订阅高使用，重叠存在但真实需求很强。"
+      }
+    },
+    {
+      "id": "P005",
+      "importCtx": {
+        "name": "Emily",
+        "budget": 40,
+        "priceSensitivity": 0.9,
+        "existingSubs": "Spotify Student ($5.99/mo), iCloud ($2.99/mo)",
+        "sameCatSubs": "Spotify",
+        "interestTags": ["music", "video"],
+        "subscriberType": "essentialist",
+        "personaAlignment": 1.1,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 1,
+        "sameCatAvgUsage": 0.7,
+        "checkinSat": "high",
+        "usageTrend": "stable"
+      },
+      "personaCard": {
+        "title": "预算极度敏感",
+        "background": "21岁，大学生，生活费有限，对每个订阅都精打细算。",
+        "auditService": { "name": "YouTube Premium", "price": 13.99, "category": "video_music" },
+        "speechStyle": "cautious",
+        "typicalPhrases": ["这个值不值", "我得算一下"],
+        "decisionVibe": "price-driven",
+        "simulatedUserResponses": {
+          "motivation": "我经常被广告打断，而且会看很多视频。",
+          "expected_usage": "应该会常用。",
+          "budget_feel": "对我来说有点贵。",
+          "overlap": "音乐上我已经有 Spotify 了。",
+          "risk": "如果月底手紧我可能会取消。"
+        },
+        "expectedScores": { "needFit": 7, "usage": 7, "budget": 2, "overlap": 6, "risk": 6, "final": 60 },
+        "scoreRationale": {
+          "needFit":  { "tier": "mid",  "reason": "'经常被广告打断' 是具体痛点，接近 problem_aware，PAC=1.1 essentialist 微加成。v1 低估了此处，实为 mid 上沿。" },
+          "usage":    { "tier": "mid",  "reason": "'应该会常用' = most_days 意图，但措辞较模糊（'应该'），essentialist 型用户使用通常稳定，定在 mid 上沿合理。" },
+          "budget":   { "tier": "low",  "reason": "$13.99 占 $40 预算 35%，极度超出正常比例（正常上限建议 15%），这是此 persona 的决定性弱点，压到 low 区间底部。" },
+          "overlap":  { "tier": "mid",  "reason": "Spotify 只覆盖音乐部分，YouTube Premium 的视频无广告价值是新增，overlap 是部分而非全面。" },
+          "risk":     { "tier": "mid",  "reason": "'月底手紧可能取消' = budget-driven cancellation，是理性风险而非冲动风险，mid 区间准确，非 low。" }
+        },
+        "badge": "Start Trial",
+        "expectedReasoning": "需求不弱（广告困扰是具体场景），但预算压力显著，$13.99占月预算35%。需求和使用意愿撑起分数，budget维度大幅拖分。v1原分56偏低，场景具体性被低估。"
+      }
+    },
+    {
+      "id": "P006",
+      "importCtx": {
+        "name": "Daniel",
+        "budget": 120,
+        "priceSensitivity": 0.5,
+        "existingSubs": "Spotify ($10/mo), Pocket Casts Plus ($4/mo)",
+        "sameCatSubs": "Spotify",
+        "interestTags": ["music", "podcasts"],
+        "subscriberType": "balanced_user",
+        "personaAlignment": 1.1,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 1,
+        "sameCatAvgUsage": 0.8,
+        "checkinSat": "high",
+        "usageTrend": "stable"
+      },
+      "personaCard": {
+        "title": "播客沉迷者",
+        "background": "30岁，软件工程师，通勤和工作时大量听播客和背景音乐。",
+        "auditService": { "name": "Apple Music", "price": 10.99, "category": "music" },
+        "speechStyle": "thoughtful",
+        "typicalPhrases": ["我基本每天都听播客", "我在意体验和生态"],
+        "decisionVibe": "habit-driven",
+        "simulatedUserResponses": {
+          "motivation": "Apple 生态整合对我有吸引力。",
+          "expected_usage": "几乎每天。",
+          "budget_feel": "可以接受。",
+          "overlap": "主要就是和 Spotify 重叠。",
+          "risk": "如果体验没明显更好，我不会换。"
+        },
+        "expectedScores": { "needFit": 7, "usage": 8, "budget": 7, "overlap": 5, "risk": 6, "final": 66 },
+        "scoreRationale": {
+          "needFit":  { "tier": "mid",  "reason": "'Apple 生态整合' = problem_aware 但偏通用，不是具体缺失功能描述，PAC=1.1 轻微加成，mid 区间中段。" },
+          "usage":    { "tier": "high", "reason": "'几乎每天' = daily，且现有音频订阅 avgUsage=0.8 证明音频消费习惯稳固可信。" },
+          "budget":   { "tier": "mid",  "reason": "'可以接受' = comfortable，$10.99 约占 $120 的 9.2%，无压力但不算特别低，mid 上沿。" },
+          "overlap":  { "tier": "mid",  "reason": "Spotify 是直接重叠，用户自己点名了，但定性为'可能切换'而非'双持'，overlap 为 significant 偏 some 之间。" },
+          "risk":     { "tier": "mid",  "reason": "'体验没更好就不换' = interest_decay，典型的升级场景风险：不是不用，而是不换，mid 区间合理。" }
+        },
+        "badge": "Start Trial",
+        "expectedReasoning": "音频使用频率很高，但已有 Spotify 形成明显重叠，因此更多是体验升级而不是刚需新增。"
+      }
+    },
+    {
+      "id": "P007",
+      "importCtx": {
+        "name": "Sophia",
+        "budget": 200,
+        "priceSensitivity": 0.6,
+        "existingSubs": "Coursera Plus ($59/mo), Udemy Business ($20/mo)",
+        "sameCatSubs": "Coursera, Udemy",
+        "interestTags": ["learning", "career"],
+        "subscriberType": "explorer",
+        "personaAlignment": 1.3,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 2,
+        "sameCatAvgUsage": 0.6,
+        "checkinSat": "medium",
+        "usageTrend": "stable"
+      },
+      "personaCard": {
+        "title": "课程狂人",
+        "background": "27岁，数据分析师，经常买课提升技能，但执行力时好时坏。",
+        "auditService": { "name": "DataCamp", "price": 25.0, "category": "learning" },
+        "speechStyle": "intellectual",
+        "typicalPhrases": ["I like structured learning", "我希望内容更系统"],
+        "decisionVibe": "self-improvement",
+        "simulatedUserResponses": {
+          "motivation": "我最近想系统补数据技能。",
+          "expected_usage": "每周几次比较现实。",
+          "budget_feel": "还行。",
+          "overlap": "和 Coursera 有一定重叠。",
+          "risk": "我怕买了课却学不完。"
+        },
+        "expectedScores": { "needFit": 8, "usage": 6, "budget": 7, "overlap": 5, "risk": 6, "final": 68 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "'系统补数据技能' = 具体职业方向，接近 scenario_specific，PAC=1.3 learning explorer 强匹配，DataCamp 的垂直定位与需求高度吻合。" },
+          "usage":    { "tier": "mid",  "reason": "'每周几次比较现实' = few_times_weekly，是理性自我评估而非乐观预测，sameCatAvgUsage=0.6 表明她有实际使用现有课程的习惯。" },
+          "budget":   { "tier": "mid",  "reason": "'还行' = comfortable，$25 占 $200 预算 12.5%，略高但尚在合理区间，mid 中段。" },
+          "overlap":  { "tier": "mid",  "reason": "Coursera 有部分数据课程重叠，但 DataCamp 专注 data 的深度是差异化价值，overlap 为 some 而非 significant。" },
+          "risk":     { "tier": "mid",  "reason": "'怕买了学不完' = interest_decay，课程类订阅的通用风险，但她有实际使用现有课程的记录（avgUsage=0.6）微降低此风险。" }
+        },
+        "badge": "Start Trial",
+        "expectedReasoning": "职业学习需求明确且具体，sameCatAvgUsage=0.6说明她真的在用现有课程，不是纯囤积。v1原分64偏保守，specific career need支撑68。"
+      }
+    },
+    {
+      "id": "P008",
+      "importCtx": {
+        "name": "Ryan",
+        "budget": 80,
+        "priceSensitivity": 0.4,
+        "existingSubs": "Xbox Game Pass ($15/mo), PlayStation Plus ($10/mo)",
+        "sameCatSubs": "Xbox Game Pass, PlayStation Plus",
+        "interestTags": ["gaming"],
+        "subscriberType": "power_user",
+        "personaAlignment": 1.3,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 2,
+        "sameCatAvgUsage": 0.9,
+        "checkinSat": "high",
+        "usageTrend": "increasing"
+      },
+      "personaCard": {
+        "title": "游戏订阅玩家",
+        "background": "24岁，学生，主要娱乐就是打游戏，追求性价比和游戏库。",
+        "auditService": { "name": "EA Play", "price": 4.99, "category": "gaming" },
+        "speechStyle": "gamer slang",
+        "typicalPhrases": ["worth it if the games are good", "如果阵容行就值"],
+        "decisionVibe": "library-driven",
+        "simulatedUserResponses": {
+          "motivation": "我会玩不少 EA 的体育和射击游戏。",
+          "expected_usage": "应该会经常开。",
+          "budget_feel": "不贵。",
+          "overlap": "Game Pass 上已经有一些类似内容。",
+          "risk": "如果最近没新作就会留不久。"
+        },
+        "expectedScores": { "needFit": 9, "usage": 9, "budget": 7, "overlap": 4, "risk": 7, "final": 72 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "'EA 体育和射击游戏' = scenario_specific（指定游戏类型），PAC=1.3 gaming power user 最高匹配，需求清晰。" },
+          "usage":    { "tier": "high", "reason": "'应该会经常开'，avgUsage=0.9 + increasing trend 证明他不只是说说，gaming 是主要娱乐。" },
+          "budget":   { "tier": "mid",  "reason": "'不贵' = comfortable，$4.99 仅占 $80 预算 6.2%，但已有两个大订阅（$25/mo total），综合预算压力给 mid。" },
+          "overlap":  { "tier": "low",  "reason": "Game Pass 已包含部分 EA 内容，两个游戏大订阅叠加第三个，overlap 为 some 偏 significant，low 区间。" },
+          "risk":     { "tier": "mid",  "reason": "'没新作就留不久' = content-driven cancellation，是理性判断不是冲动，mid 区间，且 $4.99 的低价降低了此风险的财务影响。" }
+        },
+        "badge": "Start Trial",
+        "expectedReasoning": "游戏投入高，但已有两个大型同类订阅，EA Play价值取决于偏好游戏是否足够强。$4.99价格是加分项。"
+      }
+    },
+    {
+      "id": "P009",
+      "importCtx": {
+        "name": "Oliver",
+        "budget": 150,
+        "priceSensitivity": 0.6,
+        "existingSubs": "Spotify ($10/mo)",
+        "sameCatSubs": "",
+        "interestTags": ["music"],
+        "subscriberType": "essentialist",
+        "personaAlignment": 0.9,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 0,
+        "sameCatAvgUsage": 0.0,
+        "checkinSat": "high",
+        "usageTrend": "stable"
+      },
+      "personaCard": {
+        "title": "极简主义者",
+        "background": "40岁，设计师，讨厌管理太多订阅，只保留必要服务。",
+        "auditService": { "name": "Netflix", "price": 15.99, "category": "video" },
+        "speechStyle": "minimal",
+        "typicalPhrases": ["我更喜欢少一点服务", "最好一个就够"],
+        "decisionVibe": "simplicity-first",
+        "simulatedUserResponses": {
+          "motivation": "偶尔也想看点剧。",
+          "expected_usage": "应该不会特别高频。",
+          "budget_feel": "能接受。",
+          "overlap": "没有视频订阅。",
+          "risk": "如果发现不常看，我会很快关掉。"
+        },
+        "expectedScores": { "needFit": 4, "usage": 5, "budget": 8, "overlap": 9, "risk": 5, "final": 57 },
+        "scoreRationale": {
+          "needFit":  { "tier": "low",  "reason": "'偶尔也想看点剧' = category_only，无具体内容或场景，essentialist 型 PAC=0.9 弱匹配反而扣分，low 区间核心。v1 给 6 是最大的错误来源。" },
+          "usage":    { "tier": "mid",  "reason": "'应该不会特别高频' = 自我预测偏低，无现有视频使用习惯作为基准，但不至于 rarely，mid 低沿。" },
+          "budget":   { "tier": "high", "reason": "'能接受' = comfortable，$15.99 约占 $150 预算 10.7%，预算无压力，是此 persona 少有的加分项。" },
+          "overlap":  { "tier": "high", "reason": "零同类订阅，无重叠，这是 P009 最强的正面信号，但 need 太弱导致整体分数仍然偏低。" },
+          "risk":     { "tier": "mid",  "reason": "'不常看会快关掉' = 自我认知清晰的 cancellation intent，essentialist 的理性止损，本身也是低粘性的信号，mid 区间。" }
+        },
+        "badge": "Watchlist",
+        "expectedReasoning": "无同类重叠是加分项，但motivation是category_only（'偶尔也想看'），使用频率自评不高，essentialist+低alignment。v1原分72严重高估need fit。"
+      }
+    },
+    {
+      "id": "P010",
+      "importCtx": {
+        "name": "Maya",
+        "budget": 120,
+        "priceSensitivity": 0.6,
+        "existingSubs": "Calm ($12/mo), Headspace ($13/mo)",
+        "sameCatSubs": "Calm, Headspace",
+        "interestTags": ["wellness"],
+        "subscriberType": "balanced_user",
+        "personaAlignment": 1.2,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 2,
+        "sameCatAvgUsage": 0.7,
+        "checkinSat": "medium",
+        "usageTrend": "stable"
+      },
+      "personaCard": {
+        "title": "心理健康订阅用户",
+        "background": "29岁，市场营销经理，最近开始关注冥想和睡眠质量。",
+        "auditService": { "name": "Balance", "price": 11.99, "category": "wellness" },
+        "speechStyle": "calm",
+        "typicalPhrases": ["我最近想让自己更稳定一点", "睡眠很重要"],
+        "decisionVibe": "self-care",
+        "simulatedUserResponses": {
+          "motivation": "我在找更适合自己的冥想和睡眠内容。",
+          "expected_usage": "一周几次。",
+          "budget_feel": "稍微有点重。",
+          "overlap": "和 Calm、Headspace 的确像。",
+          "risk": "如果内容差异不大，我不会三留。"
+        },
+        "expectedScores": { "needFit": 8, "usage": 7, "budget": 6, "overlap": 5, "risk": 6, "final": 64 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "'找更适合自己的冥想和睡眠内容' = problem_aware 且有明确改善目标，PAC=1.2 wellness 匹配，动机是真实的自我优化需求。" },
+          "usage":    { "tier": "mid",  "reason": "'一周几次' = few_times_weekly，wellness 类订阅的典型使用节奏，avgUsage=0.7 证明她确实在用现有 app。" },
+          "budget":   { "tier": "mid",  "reason": "'稍微有点重' = tight feel，$11.99 约占 $120 预算 10%，加上已有两个 wellness 订阅（$25/mo），综合预算感偏紧。" },
+          "overlap":  { "tier": "mid",  "reason": "Calm + Headspace 都是直接竞品（sameCatCount=2），但 avgUsage=0.7 说明她有分层使用的能力，不是纯重叠囤积。" },
+          "risk":     { "tier": "mid",  "reason": "'内容差异不大就不会三留' = 理性的 overlap-driven risk，不是冲动，是明确的试用条件，mid 准确。" }
+        },
+        "badge": "Start Trial",
+        "expectedReasoning": "动机真实，但冥想类服务功能高度相似，新增价值需要靠特色内容证明。"
+      }
+    },
+    {
+      "id": "P011",
+      "importCtx": {
+        "name": "Zoe",
+        "budget": 100,
+        "priceSensitivity": 0.6,
+        "existingSubs": "Spotify ($10/mo)",
+        "sameCatSubs": "",
+        "interestTags": ["fitness", "health"],
+        "subscriberType": "balanced_user",
+        "personaAlignment": 1.1,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 0,
+        "sameCatAvgUsage": 0.0,
+        "checkinSat": "",
+        "usageTrend": ""
+      },
+      "personaCard": {
+        "title": "初次健身者",
+        "background": "26岁，产品运营，刚开始健身6周，朋友推荐了NTC。没有任何健身类订阅历史。",
+        "auditService": { "name": "Nike Training Club Premium", "price": 14.99, "category": "fitness" },
+        "speechStyle": "cautious but motivated",
+        "typicalPhrases": ["我真的想坚持这次", "有人带着练我才不会偷懒", "不知道自己能不能"],
+        "decisionVibe": "earnest first-timer，动机真实但执行力存疑",
+        "simulatedUserResponses": {
+          "motivation": "我开始健身了，每次不知道练什么，想要有个系统的课程带着我。",
+          "expected_usage": "我打算每天练，哪怕20分钟。",
+          "budget_feel": "有点贵，但如果能帮我坚持下来就值。",
+          "overlap": "没有其他健身类的订阅。",
+          "risk": "我担心热情过了几周就不用了。"
+        },
+        "expectedScores": { "needFit": 9, "usage": 9, "budget": 6, "overlap": 9, "risk": 6, "final": 78 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "'每次不知道练什么' = scenario_specific，是具体的使用场景缺口，PAC=1.1 health 匹配，high 区间下沿（不是满分因为执行力是未知数）。" },
+          "usage":    { "tier": "high", "reason": "'每天练哪怕20分钟' = daily 意图明确，动机质量高（earnest，非 impulse），但作为 first-timer 缺乏历史验证，故非满分。" },
+          "budget":   { "tier": "mid",  "reason": "'有点贵但如果能帮我坚持' = tight feel，$14.99 约占 $100 预算 15%，恰好在高比例惩罚线边缘，mid 中段。" },
+          "overlap":  { "tier": "high", "reason": "零同类订阅，no_subs_floor 生效，overlap 维度最强正面信号，满分区间。" },
+          "risk":     { "tier": "mid",  "reason": "'热情过了几周' = interest_decay，first-timer 的典型风险，但 scenario_specific 的动机质量比 category_only 的人抗风险能力强。" }
+        },
+        "badge": "Subscribe Now",
+        "expectedReasoning": "需求场景具体，daily intent明确，零overlap是强加分项。唯一风险是first-timer的interest_decay，但整体撑得起Subscribe Now。"
+      }
+    },
+    {
+      "id": "P012",
+      "importCtx": {
+        "name": "Wei",
+        "budget": 150,
+        "priceSensitivity": 0.25,
+        "existingSubs": "Linear ($8/mo), Figma ($15/mo), Slack Pro ($7/mo)",
+        "sameCatSubs": "",
+        "interestTags": ["productivity"],
+        "subscriberType": "power_user",
+        "personaAlignment": 1.2,
+        "lifecycleCoeff": 1.05,
+        "sameCatCount": 0,
+        "sameCatAvgUsage": 0.0,
+        "checkinSat": "",
+        "usageTrend": ""
+      },
+      "personaCard": {
+        "title": "悔恨的回归者",
+        "background": "33岁，产品经理，两年前订过Notion AI但3个月后因工作不需要取消了。现在换了新工作，每天要写大量PRD和用户调研报告，主动回来订。",
+        "auditService": { "name": "Notion AI", "price": 10.0, "category": "productivity" },
+        "speechStyle": "理性、自我认知清晰，会主动解释上次为什么取消",
+        "typicalPhrases": ["上次不是因为不好用", "这次是工作真的需要", "我知道我会用"],
+        "decisionVibe": "context-change returner，cancel原因已消除",
+        "simulatedUserResponses": {
+          "motivation": "我现在每天要写PRD和用户调研报告，AI辅助写作对我来说是刚需了。",
+          "history": "订过，但因为上份工作不太需要写东西，就取消了。",
+          "cancel_reason": "用得太少，觉得不值。",
+          "expected_usage": "几乎每个工作日都会用。",
+          "budget_feel": "完全可以接受，这个价格不是问题。",
+          "overlap": "现在的工具里没有AI写作功能。",
+          "risk": "这次动机比上次充分得多，但还是希望它真的好用。"
+        },
+        "expectedScores": { "needFit": 10, "usage": 9, "budget": 9, "overlap": 9, "risk": 8, "final": 83 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "'每天写PRD和用户调研报告' = scenario_specific 且是工作刚需，cancel 原因是 context 变了（工作类型），不是服务不好，PAC=1.2 满分支撑。" },
+          "usage":    { "tier": "high", "reason": "'几乎每个工作日' = daily(weekday)，lifecycleCoeff=1.05 因有历史使用经验微加成，执行力有一定背书。" },
+          "budget":   { "tier": "high", "reason": "'完全可以接受' = comfortable，$10 仅占 $150 预算 6.7%，完全无压力，high 区间。" },
+          "overlap":  { "tier": "high", "reason": "现有工具栈（Linear/Figma/Slack）均无 AI 写作功能，零直接重叠，high 区间。" },
+          "risk":     { "tier": "high", "reason": "上次取消是外部 context 导致，本次 context 已改变，风险显著低于普通 first-timer，接近 none，high 区间下沿。" }
+        },
+        "badge": "Subscribe Now",
+        "expectedReasoning": "经典context change returner。上次取消与服务质量无关，本次need是刚需级，daily，无overlap，价格舒适。benchmark中得分最高的案例。"
+      }
+    },
+    {
+      "id": "P013",
+      "importCtx": {
+        "name": "Jin",
+        "budget": 180,
+        "priceSensitivity": 0.5,
+        "existingSubs": "Canva Pro ($13/mo), Figma ($15/mo), Sketch ($10/mo)",
+        "sameCatSubs": "Canva, Figma, Sketch",
+        "interestTags": ["design", "creative"],
+        "subscriberType": "explorer",
+        "personaAlignment": 1.0,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 3,
+        "sameCatAvgUsage": 0.55,
+        "checkinSat": "medium",
+        "usageTrend": "stable"
+      },
+      "personaCard": {
+        "title": "功能重叠陷阱",
+        "background": "35岁，自由顾问，平时做PPT和报告，偶尔接视频项目需要Premiere Pro。",
+        "auditService": { "name": "Adobe Creative Cloud", "price": 55.0, "category": "creative" },
+        "speechStyle": "理性，会讲道理，但需求其实很窄",
+        "typicalPhrases": ["大部分功能我其实有了", "就是Premiere这块空缺", "会不会买了只用一个软件"],
+        "decisionVibe": "single-use justification for a bundle",
+        "simulatedUserResponses": {
+          "motivation": "我有个视频项目需要Premiere Pro，其他软件没法替代。",
+          "expected_usage": "主要是项目来了用，大概一周两三次。",
+          "budget_feel": "挺贵的，要好好考虑。",
+          "overlap": "和我现在用的Canva、Figma有不少重叠，但视频特效这块是空白。",
+          "risk": "高级功能学习成本高，最后可能只用一小部分。"
+        },
+        "expectedScores": { "needFit": 7, "usage": 6, "budget": 4, "overlap": 3, "risk": 5, "final": 57 },
+        "scoreRationale": {
+          "needFit":  { "tier": "mid",  "reason": "Premiere 的需求是 scenario_specific，但需求范围很窄（只是视频），用整套 CC 来满足单一工具需求，整体 need fit 被稀释到 mid。" },
+          "usage":    { "tier": "mid",  "reason": "'项目来了用，一周两三次' = few_times_weekly，project-driven 而非习惯性，使用频率的稳定性较低，mid 中段。" },
+          "budget":   { "tier": "low",  "reason": "'挺贵的' = tight feel，$55 占 $180 预算 30.6%，大幅超出合理区间，是此 persona 最大的负面因素，low 区间。" },
+          "overlap":  { "tier": "low",  "reason": "三个同类设计工具（Canva/Figma/Sketch）覆盖了 CC 大部分功能，sameCatCount=3 是 benchmark 中最高的，significant overlap。" },
+          "risk":     { "tier": "mid",  "reason": "'学习成本高用不起来' = interest_decay with skill barrier，比纯冲动风险更理性但同样真实，mid 区间。" }
+        },
+        "badge": "Watchlist",
+        "expectedReasoning": "需求真实但窄（只是Premiere），$55占预算30%压力极大，三个同类设计工具大量重叠。等视频项目真的多起来再订，或考虑单独购买Premiere。"
+      }
+    },
+    {
+      "id": "P014",
+      "importCtx": {
+        "name": "Sam",
+        "budget": 50,
+        "priceSensitivity": 0.85,
+        "existingSubs": "Spotify Student ($6/mo)",
+        "sameCatSubs": "",
+        "interestTags": ["design", "creative", "learning"],
+        "subscriberType": "essentialist",
+        "personaAlignment": 1.2,
+        "lifecycleCoeff": 1.0,
+        "sameCatCount": 0,
+        "sameCatAvgUsage": 0.0,
+        "checkinSat": "",
+        "usageTrend": ""
+      },
+      "personaCard": {
+        "title": "学生刚需",
+        "background": "22岁，设计专业大三，教授要求交作业必须用Photoshop和Illustrator，没得选。",
+        "auditService": { "name": "Adobe Creative Cloud Student", "price": 20.0, "category": "creative" },
+        "speechStyle": "务实，说的都是实际需求，不花哨",
+        "typicalPhrases": ["教授要求用这个", "我不订就做不了作业", "学生价已经便宜很多了"],
+        "decisionVibe": "100% utility-driven，零冲动成分",
+        "simulatedUserResponses": {
+          "motivation": "教授要求用Photoshop和Illustrator交作业，我没有就做不了项目。",
+          "expected_usage": "学期里每天做设计作业都会用。",
+          "budget_feel": "对我来说不轻松，但这是必须的。",
+          "overlap": "没有任何设计软件。",
+          "risk": "我唯一担心的是毕业后价格翻倍，到时候可能不续了。"
+        },
+        "expectedScores": { "needFit": 10, "usage": 9, "budget": 5, "overlap": 9, "risk": 7, "final": 75 },
+        "scoreRationale": {
+          "needFit":  { "tier": "high", "reason": "'教授要求，不订做不了作业' = 硬性外部要求，scenario_specific 的极致形态，PAC=1.2 design 匹配，满分无争议。" },
+          "usage":    { "tier": "high", "reason": "'学期里每天做设计作业' = daily，且是学业要求驱动而非自发意愿，执行力由外部约束保证，可信度极高。" },
+          "budget":   { "tier": "mid",  "reason": "'不轻松但必须的' = tight + acknowledged necessity，$20 占 $50 预算 40%，比例极高，但学生自己认可了必要性，给 mid 而非 low。" },
+          "overlap":  { "tier": "high", "reason": "零设计工具存量，no_subs_floor 生效，overlap 满分，和 P011/P012 一样是此维度的最强信号。" },
+          "risk":     { "tier": "mid",  "reason": "'毕业后价格翻倍' = 前瞻性的 budget risk，不是当前 cancellation 风险，且在学期内几乎不会发生，mid 区间合理。" }
+        },
+        "badge": "Subscribe Now",
+        "expectedReasoning": "需求是硬性要求，daily使用，零overlap。Budget score偏低但整体因刚性需求刚好过Subscribe Now线。'budget hurt但必须订'的典型案例。"
+      }
+    },
+    {
+      "id": "P015",
+      "importCtx": {
+        "name": "Mia",
+        "budget": 80,
+        "priceSensitivity": 0.75,
+        "existingSubs": "Spotify ($10/mo), Netflix ($15/mo), Headspace ($13/mo), Duolingo ($7/mo)",
+        "sameCatSubs": "Headspace",
+        "interestTags": ["wellness"],
+        "subscriberType": "spontaneous",
+        "personaAlignment": 0.8,
+        "lifecycleCoeff": 0.7,
+        "sameCatCount": 1,
+        "sameCatAvgUsage": 0.1,
+        "checkinSat": "low",
+        "usageTrend": "declining"
+      },
+      "personaCard": {
+        "title": "冲动叠加",
+        "background": "24岁，自由撰稿人，已有一堆订阅，Headspace这个月一次都没打开。昨晚刷到Calm广告感觉不错。",
+        "auditService": { "name": "Calm", "price": 14.99, "category": "wellness" },
+        "speechStyle": "随意、自我说服式，理由越说越站不住脚",
+        "typicalPhrases": ["感觉Calm更适合我", "Headspace我确实没怎么用", "先试试嘛"],
+        "decisionVibe": "impulse + rationalization，典型的'新的总是更好'心理",
+        "simulatedUserResponses": {
+          "motivation": "看到广告说可以改善睡眠，感觉挺有意思的。",
+          "expected_usage": "可能一周用几次吧。",
+          "budget_feel": "还行，不算很贵。",
+          "overlap": "Headspace就是类似的，但我基本没打开过它。",
+          "risk": "我之前订了的东西也有没坚持用的。"
+        },
+        "expectedScores": { "needFit": 4, "usage": 3, "budget": 5, "overlap": 2, "risk": 2, "final": 38 },
+        "scoreRationale": {
+          "needFit":  { "tier": "low",  "reason": "'看到广告感觉有意思' = category_only + ad-triggered，无具体睡眠问题描述，PAC=0.8 spontaneous 弱匹配反向拉低，low 区间。" },
+          "usage":    { "tier": "low",  "reason": "'可能一周用几次' = weekly 且语气模糊，lifecycleCoeff=0.7 进一步打折，declining trend 背景下实际预测接近 rarely。" },
+          "budget":   { "tier": "mid",  "reason": "'还行' = comfortable 表述，但 $14.99 占 $80 预算 18.7%，超出高比例线，actual budget score 被惩罚到 mid 低沿。" },
+          "overlap":  { "tier": "low",  "reason": "Headspace 是直接同类且 sameCatAvgUsage=0.1（几乎从不打开），订新 app 而不先用现有 app = benchmark 中最强的反向 overlap 信号。" },
+          "risk":     { "tier": "low",  "reason": "'之前订的也有没坚持用的' = 自述 impulse 历史，combined with spontaneous type + low checkinSat + declining trend，风险评级最低区间，AHA 应触发。" }
+        },
+        "badge": "Alternatives",
+        "expectedReasoning": "category_only动机+已有同类但基本不用+declining trend+low satisfaction+spontaneous+低PAC。整个benchmark里最应该被劝退的case。AHA应该触发（has_unactivated_same_cat）。"
+      }
+    }
+  ]
+}
