@@ -1,0 +1,1424 @@
+<!-- Onboarding Welcome -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SubSense Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "mint": "#10B981",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-white font-display antialiased transition-colors duration-200">
+<div class="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Top Bar -->
+<div class="flex items-center justify-between p-6 pt-8 z-10">
+<div class="flex items-center gap-2">
+<div class="flex items-center justify-center size-10 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-blue-400">
+<span class="material-symbols-outlined text-2xl">diamond</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">SubSense</h2>
+</div>
+<!-- Optional Skip button for onboarding context -->
+<button class="text-sm font-medium text-gray-500 hover:text-primary dark:text-gray-400 transition-colors">
+                Log In
+            </button>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 flex flex-col items-center overflow-y-auto px-6 pb-24">
+<!-- Hero Text -->
+<div class="mt-4 flex flex-col items-center text-center space-y-4 max-w-xs mx-auto">
+<h1 class="text-3xl md:text-4xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
+                    Stop paying for <span class="text-primary">subscriptions</span> you don't use.
+                </h1>
+<p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+                    We'll help you track expenses, cancel unwanted services, and decide smarter.
+                </p>
+</div>
+<!-- Visual / Video Placeholder -->
+<div class="w-full mt-10 mb-6 flex-1 flex flex-col justify-center min-h-[300px]">
+<div class="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-xl bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 border border-white/20 dark:border-white/5 group cursor-pointer">
+<!-- Background Image -->
+<div class="absolute inset-0 bg-cover bg-center opacity-90 transition-transform duration-700 group-hover:scale-105" data-alt="Abstract 3D illustration of floating app icons and coins representing subscription management" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA3qBSFNbRZeFk8q3n4FhwHNwCLokNTweIo3JeQGY62JwK9G4TzX-B6fwEjOhrks6QnZ9-QFO4tlds10EatG5DC5Qg0SM_E3SCgpk1-YKkM5UWLfOdx8W7x81lgSS4qF27ycZTvc3jIz8OBCOwhbxa6N-xy2pmeOCUa7jMXCeRHomfiJBLROv1K35ZdMsxD11t_zVD_UBMOIiZ4pfnmiXHheVZNomfi0w4syYREG3Dk-0uGzoIn-fa2mnJ_Gd8A0uLG9d_1c6rmMss');">
+</div>
+<!-- Overlay Gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+<!-- Play Button (Centered) -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="size-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 text-white shadow-lg transition-transform transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl ml-1">play_arrow</span>
+</div>
+</div>
+<!-- Floating decorative pill (Simulating UI element) -->
+<div class="absolute bottom-6 left-6 right-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-white/50 dark:border-white/10 flex items-center gap-3 animate-pulse">
+<div class="size-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 dark:text-red-400">
+<span class="material-symbols-outlined">unsubscribe</span>
+</div>
+<div class="flex-1">
+<div class="h-2 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-1.5"></div>
+<div class="h-2 w-16 bg-gray-100 dark:bg-gray-600 rounded"></div>
+</div>
+<span class="text-xs font-bold text-gray-400 dark:text-gray-500">-$14.99</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Area -->
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light via-background-light/95 to-transparent dark:from-background-dark dark:via-background-dark/95 pt-12">
+<button class="w-full h-14 bg-mint hover:bg-[#059669] active:scale-[0.98] transition-all rounded-xl text-white font-bold text-lg shadow-lg shadow-mint/20 flex items-center justify-center gap-2 group">
+                Get Started
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<div class="mt-6 flex justify-center gap-1.5">
+<div class="h-1.5 w-6 rounded-full bg-primary"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+</div>
+</div>
+</div>
+</body></html>
+
+<!-- Conversational Setup -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SubSense Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f8f9fc",
+                        "background-dark": "#111621",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2233",
+                        "text-primary-light": "#0e121b",
+                        "text-primary-dark": "#f8f9fc",
+                        "text-secondary-light": "#4d6599",
+                        "text-secondary-dark": "#94a3b8",
+                        "bubble-ai-light": "#e7ebf3",
+                        "bubble-ai-dark": "#2d3748",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-text-primary-light dark:text-text-primary-dark overflow-hidden h-screen flex flex-col">
+<!-- Header -->
+<header class="flex items-center justify-between px-4 py-3 bg-background-light dark:bg-background-dark shrink-0">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-text-primary-light dark:text-text-primary-dark">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Setup</h2>
+<div class="size-10 shrink-0"></div> <!-- Spacer for balance -->
+</header>
+<!-- Progress Indicator -->
+<div class="flex flex-col items-center justify-center gap-2 py-4 bg-background-light dark:bg-background-dark shrink-0">
+<div class="flex flex-row items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+<div class="h-2 w-8 rounded-full bg-primary transition-all duration-300"></div>
+<div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+<div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+<div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+</div>
+<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">Step 2 of 5</p>
+</div>
+<!-- Main Content Area (Scrollable) -->
+<main class="flex-1 overflow-y-auto no-scrollbar px-4 pb-24">
+<div class="flex flex-col gap-6 max-w-lg mx-auto w-full">
+<!-- AI Chat Bubble -->
+<div class="flex items-end gap-3 animate-fade-in-up">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 shrink-0 shadow-sm border border-white/10" data-alt="AI assistant avatar showing a friendly abstract face" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCufERbNn4kNlOmgn8kBOY401MXfWo06z6jH0n4pGPMB09vTlqHl8PunGODz81D2_nt1d4N3VSlY7S1kxlX1qTbiZNUFhEECuMSUnHoTANwWU86ZluKWBxzQoXwwCia9u6xbo8_ECL3BHbxS6AOSjhSPDUacr4_LceUWmBHbnoRNkac44ZVNbfuHv7xNhDA6mwmfotEM1bG0rEHpSkvxk0C0QRiyAhh24jArt8Y45gXo8wpO1hA2-ODh_VD5ADt0YIRoucgVp8SQLY");'></div>
+<div class="flex flex-col gap-1 items-start max-w-[85%]">
+<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark ml-1">SubSense AI</p>
+<div class="p-4 rounded-2xl rounded-bl-none bg-bubble-ai-light dark:bg-bubble-ai-dark text-text-primary-light dark:text-text-primary-dark shadow-sm">
+<p class="text-base font-normal leading-relaxed">
+                            Which subscriptions do you currently have? Tap all that apply below.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Subscription Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pl-14">
+<!-- Netflix -->
+<button class="group flex flex-col items-center justify-center gap-3 p-4 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-transparent hover:border-primary/50 hover:shadow-md transition-all duration-200">
+<div class="w-12 h-12 rounded-full bg-black flex items-center justify-center text-red-600 font-bold text-xl tracking-tighter">N</div>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark group-hover:text-primary transition-colors">Netflix</span>
+</button>
+<!-- Spotify -->
+<button class="group flex flex-col items-center justify-center gap-3 p-4 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-transparent hover:border-primary/50 hover:shadow-md transition-all duration-200">
+<div class="w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-size: 28px;">music_note</span>
+</div>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark group-hover:text-primary transition-colors">Spotify</span>
+</button>
+<!-- Youtube -->
+<button class="group flex flex-col items-center justify-center gap-3 p-4 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-transparent hover:border-primary/50 hover:shadow-md transition-all duration-200 ring-2 ring-primary bg-primary/5">
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#FF0000]">
+<span class="material-symbols-outlined font-variation-settings-fill" style="font-variation-settings: 'FILL' 1; font-size: 28px;">play_arrow</span>
+</div>
+<span class="text-sm font-bold text-primary dark:text-primary">YouTube</span>
+<div class="absolute top-2 right-2 bg-primary text-white rounded-full p-0.5">
+<span class="material-symbols-outlined text-[14px] font-bold">check</span>
+</div>
+</button>
+<!-- Amazon Prime -->
+<button class="group flex flex-col items-center justify-center gap-3 p-4 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-transparent hover:border-primary/50 hover:shadow-md transition-all duration-200">
+<div class="w-12 h-12 rounded-full bg-[#00A8E1] flex items-center justify-center text-white font-bold italic">
+                        prime
+                    </div>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark group-hover:text-primary transition-colors">Prime</span>
+</button>
+<!-- Disney+ -->
+<button class="group flex flex-col items-center justify-center gap-3 p-4 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-transparent hover:border-primary/50 hover:shadow-md transition-all duration-200">
+<div class="w-12 h-12 rounded-full bg-[#113CCF] flex items-center justify-center text-white font-serif font-bold text-lg">
+                        D+
+                    </div>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark group-hover:text-primary transition-colors">Disney+</span>
+</button>
+<!-- Dropbox -->
+<button class="group flex flex-col items-center justify-center gap-3 p-4 bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-transparent hover:border-primary/50 hover:shadow-md transition-all duration-200">
+<div class="w-12 h-12 rounded-full bg-[#0061FF] flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-size: 28px;">box</span>
+</div>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark group-hover:text-primary transition-colors">Dropbox</span>
+</button>
+</div>
+<!-- "Other" option or manual search hint -->
+<div class="flex justify-center w-full pl-14">
+<button class="text-sm text-primary font-medium hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">search</span>
+                    Search for other apps
+                </button>
+</div>
+<div class="h-6"></div>
+</div>
+</main>
+<!-- Bottom Action Area (Fixed) -->
+<div class="bg-surface-light dark:bg-surface-dark border-t border-slate-200 dark:border-slate-800 p-4 pb-8 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+<div class="flex flex-col gap-3 max-w-lg mx-auto w-full">
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-primary hover:bg-blue-600 active:scale-[0.98] transition-all text-white gap-3 shadow-lg shadow-blue-500/20">
+<span class="material-symbols-outlined">mail</span>
+<span class="text-base font-bold leading-normal tracking-[0.015em]">Scan Gmail for receipts</span>
+</button>
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-text-secondary-light dark:text-text-secondary-dark gap-2 text-sm font-medium transition-colors">
+                Skip for now
+            </button>
+</div>
+</div>
+</body></html>
+
+<!-- Weekly Check-in Swipe -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Weekly Check-in Swipe</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex flex-col overflow-hidden">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between p-4 pt-6 pb-2 shrink-0 z-10">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-900 dark:text-white">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] text-center">Weekly Check-in</h2>
+<div class="size-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500">more_horiz</span>
+</div>
+</header>
+<!-- Main Content Area with Swipe Card -->
+<main class="flex-1 flex flex-col items-center justify-center p-4 w-full max-w-md mx-auto relative">
+<!-- Stack Effect (Background Cards for depth) -->
+<div class="absolute w-[90%] h-full top-6 bg-white/40 dark:bg-slate-700/40 rounded-3xl scale-95 translate-y-4 -z-10 shadow-sm"></div>
+<div class="absolute w-[85%] h-full top-6 bg-white/20 dark:bg-slate-700/20 rounded-3xl scale-90 translate-y-8 -z-20 shadow-sm"></div>
+<!-- The Main Swipe Card -->
+<div class="w-full bg-white dark:bg-slate-800 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] overflow-hidden flex flex-col relative border border-slate-100 dark:border-slate-700">
+<!-- Card Header: Service Info -->
+<div class="flex flex-col items-center pt-8 px-6 pb-2">
+<div class="size-16 bg-[#1DB954] rounded-full flex items-center justify-center mb-4 shadow-lg shadow-green-500/20">
+<!-- Simple svg replacement for Spotify logo to keep it clean -->
+<svg fill="white" height="32" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 0C5.4 0 0 5.4 0 12C0 18.6 5.4 24 12 24C18.6 24 24 18.6 24 12C24 5.4 18.6 0 12 0ZM17.5 17.3C17.2 17.7 16.6 17.9 16.2 17.6C13.4 15.9 9.9 15.5 5.8 16.4C5.3 16.5 4.9 16.2 4.8 15.7C4.7 15.2 5 14.8 5.5 14.7C10 13.7 13.9 14.1 17.1 16.1C17.5 16.3 17.6 16.9 17.5 17.3ZM19 14C18.6 14.6 17.9 14.8 17.3 14.4C14.1 12.5 9.3 11.9 5.6 13C4.9 13.2 4.3 12.8 4.1 12.2C3.9 11.5 4.3 10.9 4.9 10.7C9.3 9.4 14.7 10 18.4 12.3C19 12.6 19.2 13.4 19 14ZM19.1 10.6C15.2 8.3 8.9 8.1 5.2 9.2C4.6 9.4 3.9 9 3.7 8.4C3.5 7.8 3.9 7.1 4.5 6.9C8.8 5.6 15.8 5.9 20.3 8.6C20.8 8.9 21 9.6 20.7 10.2C20.4 10.7 19.7 10.9 19.1 10.6Z"></path>
+</svg>
+</div>
+<h1 class="text-2xl font-bold tracking-tight mb-1">Spotify Premium</h1>
+<p class="text-3xl font-bold text-slate-900 dark:text-white">$10.99<span class="text-lg font-medium text-slate-400 dark:text-slate-500">/mo</span></p>
+</div>
+<!-- Card Content: Usage Stats -->
+<div class="flex-1 px-6 py-4 flex flex-col">
+<div class="flex items-end justify-between mb-4">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Usage Trend</p>
+<p class="text-4xl font-bold tracking-tight text-red-500 dark:text-red-400">-60%</p>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center gap-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-2 py-1 rounded-md text-xs font-semibold">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+                            Low Activity
+                        </span>
+<p class="text-xs text-slate-400 mt-1">Last 30 Days</p>
+</div>
+</div>
+<!-- Graph Section -->
+<div class="relative h-40 w-full mt-2">
+<svg class="w-full h-full overflow-visible" fill="none" preserveaspectratio="none" viewbox="0 0 472 150" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="paint0_linear_1131_5935" x1="236" x2="236" y1="25" y2="150">
+<stop stop-color="#3b82f6" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#3b82f6" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Updated stroke color to use currentColor or a specific tailwind variable approach -->
+<path class="text-blue-500/20" d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V149H0V109Z" fill="url(#paint0_linear_1131_5935)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#3b82f6" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<!-- Week Labels -->
+<div class="flex justify-between mt-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+<span>Week 1</span>
+<span>Week 2</span>
+<span>Week 3</span>
+<span>Week 4</span>
+</div>
+</div>
+</div>
+<!-- Card Actions Instructions (Subtle) -->
+<div class="px-6 pb-6 text-center">
+<p class="text-sm text-slate-400 dark:text-slate-500">Your average session was 12 mins.</p>
+</div>
+</div>
+<!-- Action Buttons / Swipe Controls -->
+<div class="w-full flex items-center justify-between mt-8 px-4 gap-4">
+<!-- Left: Barely Used -->
+<div class="flex flex-col items-center gap-2">
+<button class="size-16 rounded-full bg-white dark:bg-slate-800 shadow-[0_4px_12px_rgba(239,68,68,0.2)] dark:shadow-[0_4px_12px_rgba(239,68,68,0.1)] border border-red-100 dark:border-red-900/30 flex items-center justify-center group active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl text-red-500 group-hover:scale-110 transition-transform">close</span>
+</button>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Barely Used</span>
+</div>
+<!-- Middle: Occasional -->
+<div class="flex flex-col items-center gap-2 -mt-4"> <!-- Lifted slightly -->
+<button class="size-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl text-slate-600 dark:text-slate-300">hourglass_top</span>
+</button>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Occasional</span>
+</div>
+<!-- Right: Love It -->
+<div class="flex flex-col items-center gap-2">
+<button class="size-16 rounded-full bg-primary shadow-[0_4px_12px_rgba(36,99,235,0.3)] flex items-center justify-center group active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl text-white group-hover:scale-110 transition-transform">favorite</span>
+</button>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Love it</span>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shrink-0 pb-safe">
+<div class="flex justify-around items-center h-16 px-2">
+<button class="flex flex-col items-center justify-center w-full h-full text-primary gap-1">
+<span class="material-symbols-outlined filled text-[24px]">style</span>
+<span class="text-[10px] font-medium">Review</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 gap-1">
+<span class="material-symbols-outlined text-[24px]">list_alt</span>
+<span class="text-[10px] font-medium">Subs</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 gap-1">
+<span class="material-symbols-outlined text-[24px]">pie_chart</span>
+<span class="text-[10px] font-medium">Reports</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 gap-1">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</nav>
+<!-- Safe Area spacing for bottom nav on newer iPhones -->
+<div class="h-6 bg-white dark:bg-slate-800 w-full shrink-0"></div>
+</body></html>
+
+<!-- AI Intervention Q&A -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Intervention Q&amp;A</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2233",
+                        "text-light": "#111318",
+                        "text-dark": "#e2e8f0",
+                        "text-secondary-light": "#616e89",
+                        "text-secondary-dark": "#94a3b8",
+                        "border-light": "#dbdee6",
+                        "border-dark": "#2d3748",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom radio button styling for modern look */
+        .custom-radio:checked + div {
+            border-color: #2463eb;
+            background-color: rgba(36, 99, 235, 0.05);
+        }
+        .custom-radio:checked + div .radio-circle {
+            border-color: #2463eb;
+            border-width: 5px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-text-light dark:text-text-dark min-h-screen flex flex-col overflow-hidden relative">
+<!-- Dimmed Background Context (Simulated previous screen) -->
+<div class="absolute inset-0 z-0 opacity-20 dark:opacity-10 pointer-events-none filter blur-[2px]" data-alt="Abstract blurred colorful background pattern" style="background: linear-gradient(135deg, #FF6B6B 0%, #556270 100%);">
+</div>
+<!-- Main Content Container -->
+<div class="relative z-10 flex h-full w-full max-w-md mx-auto flex-col flex-1 bg-surface-light dark:bg-surface-dark shadow-2xl min-h-screen">
+<!-- Header -->
+<div class="flex items-center px-6 py-5 justify-between bg-surface-light dark:bg-surface-dark sticky top-0 z-20">
+<button aria-label="Go back" class="text-text-light dark:text-text-dark flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-background-light dark:hover:bg-background-dark transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</button>
+<h2 class="text-text-light dark:text-text-dark text-lg font-bold leading-tight flex-1 text-center">Weekly Check-in</h2>
+<button class="flex items-center justify-end px-2 py-1 rounded-lg hover:bg-background-light dark:hover:bg-background-dark transition-colors">
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-semibold tracking-wide">Skip</p>
+</button>
+</div>
+<!-- AI Intervention Question Area -->
+<div class="flex-1 flex flex-col px-6 pt-4 pb-8 overflow-y-auto">
+<!-- AI Avatar/Icon + Context -->
+<div class="flex flex-col items-center justify-center mb-8 mt-4">
+<div class="h-16 w-16 rounded-full bg-gradient-to-tr from-primary to-blue-400 flex items-center justify-center mb-4 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white" style="font-size: 32px;">smart_toy</span>
+</div>
+<div class="bg-primary/10 dark:bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3">AI Insight</div>
+<h1 class="text-2xl font-bold text-center text-text-light dark:text-text-dark leading-snug mb-2">
+                    Why did you use Spotify less this week?
+                </h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-center text-sm max-w-xs">
+                    Help us personalize your subscription recommendations.
+                </p>
+</div>
+<!-- Options Form -->
+<form class="flex flex-col gap-3 w-full max-w-sm mx-auto">
+<!-- Option 1 -->
+<label class="cursor-pointer group relative">
+<input checked="" class="custom-radio sr-only" name="reason" type="radio"/>
+<div class="flex items-center p-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-background-dark hover:border-primary/50 transition-all shadow-sm">
+<div class="flex-1">
+<p class="font-medium text-text-light dark:text-text-dark text-base">Been busy, just temporary</p>
+</div>
+<div class="radio-circle w-5 h-5 rounded-full border-2 border-border-light dark:border-gray-600 ml-4 flex-shrink-0 transition-all bg-white dark:bg-transparent"></div>
+</div>
+</label>
+<!-- Option 2 -->
+<label class="cursor-pointer group relative">
+<input class="custom-radio sr-only" name="reason" type="radio"/>
+<div class="flex items-center p-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-background-dark hover:border-primary/50 transition-all shadow-sm">
+<div class="flex-1">
+<p class="font-medium text-text-light dark:text-text-dark text-base">Using Apple Music more</p>
+</div>
+<div class="radio-circle w-5 h-5 rounded-full border-2 border-border-light dark:border-gray-600 ml-4 flex-shrink-0 transition-all bg-white dark:bg-transparent"></div>
+</div>
+</label>
+<!-- Option 3 -->
+<label class="cursor-pointer group relative">
+<input class="custom-radio sr-only" name="reason" type="radio"/>
+<div class="flex items-center p-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-background-dark hover:border-primary/50 transition-all shadow-sm">
+<div class="flex-1">
+<p class="font-medium text-text-light dark:text-text-dark text-base">Not in the mood for music</p>
+</div>
+<div class="radio-circle w-5 h-5 rounded-full border-2 border-border-light dark:border-gray-600 ml-4 flex-shrink-0 transition-all bg-white dark:bg-transparent"></div>
+</div>
+</label>
+<!-- Option 4 -->
+<label class="cursor-pointer group relative">
+<input class="custom-radio sr-only" name="reason" type="radio"/>
+<div class="flex items-center p-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-background-dark hover:border-primary/50 transition-all shadow-sm">
+<div class="flex-1">
+<p class="font-medium text-text-light dark:text-text-dark text-base">Honestly forgot about it</p>
+</div>
+<div class="radio-circle w-5 h-5 rounded-full border-2 border-border-light dark:border-gray-600 ml-4 flex-shrink-0 transition-all bg-white dark:bg-transparent"></div>
+</div>
+</label>
+<!-- Other Option Input (Hidden by default or part of dynamic expansion, kept simple here as a text area for "Other") -->
+<label class="cursor-pointer group relative">
+<input class="custom-radio sr-only" name="reason" type="radio"/>
+<div class="flex items-center p-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-background-dark hover:border-primary/50 transition-all shadow-sm">
+<div class="flex-1">
+<p class="font-medium text-text-light dark:text-text-dark text-base">Something else...</p>
+</div>
+<div class="radio-circle w-5 h-5 rounded-full border-2 border-border-light dark:border-gray-600 ml-4 flex-shrink-0 transition-all bg-white dark:bg-transparent"></div>
+</div>
+</label>
+</form>
+<div class="mt-auto pt-8 pb-4">
+<button class="w-full flex items-center justify-center rounded-xl h-14 bg-primary hover:bg-blue-600 active:bg-blue-700 text-white text-base font-bold shadow-lg shadow-primary/30 transition-all transform active:scale-[0.98]">
+                    Submit Feedback
+                </button>
+</div>
+</div>
+<!-- Safe Area Spacer for iOS Home Indicator -->
+<div class="h-6 w-full bg-surface-light dark:bg-surface-dark"></div>
+</div>
+</body></html>
+
+<!-- Fit Assessment Start -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fit Assessment</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e2330",
+                        "text-main-light": "#0e121b",
+                        "text-main-dark": "#f8f9fc",
+                        "text-sub-light": "#4d6599",
+                        "text-sub-dark": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main-light dark:text-text-main-dark transition-colors duration-200">
+<div class="relative flex min-h-screen w-full flex-col mx-auto max-w-md bg-background-light dark:bg-background-dark shadow-2xl overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-text-main-light dark:text-text-main-dark">menu</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight">Fit Assessment</h1>
+<button class="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-text-main-light dark:text-text-main-dark">notifications</span>
+<span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
+</button>
+</header>
+<main class="flex-1 flex flex-col gap-6 p-4 pb-20">
+<!-- Upload Hero Section -->
+<section class="@container">
+<div class="flex flex-col overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm ring-1 ring-black/5 dark:ring-white/10">
+<div class="relative h-40 w-full bg-cover bg-center" data-alt="Abstract gradient mesh representing digital analysis" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCoX48VV03asoQIlAhU-vjoPF93hfkQK80Z5eeGGpRYU330JhROZr80S83SZETU1xwr_PjjPS--Zt6-Q6QBJLF8i2pqZdcVwpHmzCCJ7T13zeZGtrCxauz8CAQ6oh1S7VK5RCsMV2z1Xj4IORIDfeAOf1YyoikThO16lBPtbEfQLsYYuzbeFdZPlfiGA6olM3REhJ51Sa_jy9V-xprvwZDNiGVYRzZNwtCLuDo27_9tMl1IX2t2JeMcL0JP7YJWC5SAFEEDxREU6Uw");'>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-3 left-4 text-white">
+<span class="material-symbols-outlined mb-1 text-3xl">add_a_photo</span>
+</div>
+</div>
+<div class="flex flex-col gap-3 p-5">
+<div>
+<h2 class="text-xl font-bold leading-tight">Upload Screenshot</h2>
+<p class="mt-1 text-sm text-text-sub-light dark:text-text-sub-dark">Analyze your checkout page or pricing plan instantly.</p>
+</div>
+<button class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-md shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+<span>Upload Image</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Search Section -->
+<section>
+<div class="relative flex items-center">
+<span class="absolute left-4 flex items-center text-text-sub-light dark:text-text-sub-dark">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="h-12 w-full rounded-xl border-none bg-white dark:bg-surface-dark py-3 pl-12 pr-4 text-base shadow-sm ring-1 ring-black/5 dark:ring-white/10 placeholder:text-text-sub-light/70 dark:placeholder:text-text-sub-dark/70 focus:ring-2 focus:ring-primary dark:focus:ring-primary" placeholder="Type service name..." type="text"/>
+</div>
+</section>
+<!-- Quick Suggestions -->
+<section>
+<div class="flex items-center justify-between px-1 mb-3">
+<h3 class="text-base font-bold text-text-main-light dark:text-text-main-dark">Quick Suggestions</h3>
+<button class="text-xs font-medium text-primary hover:text-primary/80">View all</button>
+</div>
+<div class="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+<button class="flex h-9 shrink-0 items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-dark px-4 transition-colors hover:border-primary/50 dark:hover:border-primary/50">
+<img alt="Netflix logo" class="h-4 w-auto object-contain" data-alt="Netflix logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd1-ccYjK5jyHX_wFo0xPuoBdQI8tUHrZrvn_2BSbo-ABn_4giySaFu8kS2DpX-KHKCiAqd-yH_njA28Taz9EE87bpAtJ0CfP2DJcPupc_s7SJH3FMHnk22JTZ7OFTHaVO2aSnzri1cbLYKA8d3GN6s9dTe3addYjUiir7EaeLsdT7B3WmKsDoIcKgqm7xoOITfvdoYpbJX-2RKLBNh50JCZWMh7l3RNYcZENZVTkziPXVP0SAsV7xjdbFevatub7-m_CK2mK9BKw"/>
+<span class="text-sm font-medium">Netflix</span>
+</button>
+<button class="flex h-9 shrink-0 items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-dark px-4 transition-colors hover:border-primary/50 dark:hover:border-primary/50">
+<div class="h-4 w-4 rounded-full bg-black flex items-center justify-center text-[8px] text-white font-serif font-bold">M</div>
+<span class="text-sm font-medium">Masterclass</span>
+</button>
+<button class="flex h-9 shrink-0 items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-dark px-4 transition-colors hover:border-primary/50 dark:hover:border-primary/50">
+<img alt="Spotify logo" class="h-4 w-auto object-contain" data-alt="Spotify logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQUCenGxllec86wJ8-bpUnOtpQ9pA2gFm2IkUp3V4Z8vESE1bjJRcg8Wvy_C3Za_4orTYloe7L77foM8EtgzVuX2QMB8ugvr8mEeZWLz_U1LzbmpyhlD-IxVLRWdxT67gnKJyEXXF5uGfFrzZSmbgLmfLYtkfDnH891STRMVp8mNYep3LIeROb1chpXMHW5Oy0kHyznv7X6Dbd1-9gIiKK5jM-pG_nacsm40iFTDzObty-ecJdZ4IFIkfklbn1Wn_Wp_y0QgEcnPg"/>
+<span class="text-sm font-medium">Spotify</span>
+</button>
+<button class="flex h-9 shrink-0 items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-dark px-4 transition-colors hover:border-primary/50 dark:hover:border-primary/50">
+<div class="h-4 w-4 rounded bg-[#FF0000] flex items-center justify-center text-[8px] text-white font-bold">A</div>
+<span class="text-sm font-medium">Adobe</span>
+</button>
+</div>
+</section>
+<!-- Recent Evaluations -->
+<section>
+<h3 class="text-base font-bold text-text-main-light dark:text-text-main-dark mb-3 px-1">Recent Evaluations</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Card 1 -->
+<div class="group flex flex-col rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm ring-1 ring-black/5 dark:ring-white/10 transition-all hover:shadow-md">
+<div class="mb-3 flex items-start justify-between">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20">
+<span class="text-lg font-bold text-[#0063e5]">D+</span>
+</div>
+<span class="flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-bold text-green-700 dark:bg-green-900/30 dark:text-green-400">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                                72
+                            </span>
+</div>
+<div>
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark">Disney+</h4>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-1">Basic Tier Plan</p>
+</div>
+<div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700">
+<div class="h-1.5 rounded-full bg-green-500" style="width: 72%"></div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm ring-1 ring-black/5 dark:ring-white/10 transition-all hover:shadow-md">
+<div class="mb-3 flex items-start justify-between">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20">
+<span class="text-lg font-serif font-bold text-blue-400">C</span>
+</div>
+<span class="flex items-center gap-1 rounded-full bg-orange-50 px-2 py-1 text-xs font-bold text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+<span class="material-symbols-outlined text-[14px]">trending_flat</span>
+                                48
+                            </span>
+</div>
+<div>
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark">Calm</h4>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-1">Premium Annual</p>
+</div>
+<div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700">
+<div class="h-1.5 rounded-full bg-orange-400" style="width: 48%"></div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm ring-1 ring-black/5 dark:ring-white/10 transition-all hover:shadow-md">
+<div class="mb-3 flex items-start justify-between">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-900/20">
+<span class="text-lg font-bold text-purple-600">H</span>
+</div>
+<span class="flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs font-bold text-red-700 dark:bg-red-900/30 dark:text-red-400">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+                                35
+                            </span>
+</div>
+<div>
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark">Hulu</h4>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-1">Ad-supported</p>
+</div>
+<div class="mt-3 h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700">
+<div class="h-1.5 rounded-full bg-red-500" style="width: 35%"></div>
+</div>
+</div>
+<!-- Add New Placeholder -->
+<button class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-transparent p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<span class="material-symbols-outlined text-3xl text-gray-400 mb-2">add</span>
+<span class="text-sm font-medium text-text-sub-light dark:text-text-sub-dark">New Analysis</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Tab Bar (Contextual for an App) -->
+<nav class="fixed bottom-0 z-50 flex w-full max-w-md items-center justify-around border-t border-gray-200 bg-surface-light px-2 py-3 pb-safe dark:border-gray-800 dark:bg-surface-dark">
+<button class="flex flex-col items-center gap-1 p-2 text-primary">
+<span class="material-symbols-outlined fill-1">analytics</span>
+<span class="text-[10px] font-medium">Evaluate</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-medium">History</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</nav>
+</div>
+<style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Safe area padding for iPhones with home indicator */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+</body></html>
+
+<!-- Fit Assessment Result -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fit Assessment Result</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#2463eb",
+                "background-light": "#f6f6f8",
+                "background-dark": "#111621",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        /* Custom styles for detail marker removal */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0e121b] dark:text-gray-100 font-display transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto bg-background-light dark:bg-background-dark border-x border-gray-200 dark:border-gray-800 shadow-2xl">
+<!-- Header -->
+<div class="flex items-center p-4 pb-2 justify-between sticky top-0 z-10 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+<button class="text-[#0e121b] dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-[#0e121b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">
+                Fit Assessment
+            </h2>
+</div>
+<!-- Content Scroll Area -->
+<div class="flex-1 overflow-y-auto pb-32"> <!-- Padding bottom for fixed footer -->
+<!-- Context Header -->
+<div class="px-4 text-center mt-2 mb-6">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wider">Reviewing subscription for</p>
+<h1 class="text-2xl font-bold text-[#0e121b] dark:text-white mt-1">Masterclass</h1>
+</div>
+<!-- Score Gauge Section -->
+<div class="flex flex-col items-center justify-center px-4 py-4">
+<div class="relative flex items-center justify-center size-52">
+<!-- Gauge SVG -->
+<svg class="size-full -rotate-90" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle class="text-gray-200 dark:text-gray-800" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-width="8"></circle>
+<!-- Progress Circle (42%) -->
+<circle class="text-orange-500 transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="145.7" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<!-- Inner Text -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="text-4xl font-bold text-[#0e121b] dark:text-white tracking-tight">42</span>
+<span class="text-sm font-medium text-gray-500 dark:text-gray-400">out of 100</span>
+</div>
+</div>
+<div class="mt-4 flex flex-col items-center gap-1">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 px-3 py-1 text-sm font-bold text-orange-600 dark:text-orange-400">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+                        Low Fit
+                    </span>
+<p class="text-center text-gray-500 dark:text-gray-400 text-sm max-w-[260px] mt-2">
+                        This subscription doesn't align well with your current goals and budget.
+                    </p>
+</div>
+</div>
+<!-- AI Suggestion Card -->
+<div class="px-4 py-6">
+<div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 p-5 border border-primary/20">
+<div class="absolute top-0 right-0 p-3 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">smart_toy</span>
+</div>
+<div class="flex items-start gap-3 relative z-10">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-md shadow-primary/20">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-base font-bold text-[#0e121b] dark:text-white">AI Suggestion</h3>
+<p class="text-sm leading-relaxed text-[#0e121b]/80 dark:text-gray-300">
+                                Considering the low fit score, we recommend you <strong>Wait 30 days</strong> before subscribing to see if the need persists.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Factors List -->
+<div class="px-4">
+<h3 class="text-[#0e121b] dark:text-white tracking-tight text-xl font-bold leading-tight pb-4">Risk Factors</h3>
+<div class="flex flex-col gap-3">
+<!-- Budget Impact (Red) -->
+<details class="group flex flex-col rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300" open="">
+<summary class="flex cursor-pointer items-center justify-between gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<p class="text-[#0e121b] dark:text-white text-sm font-semibold">Budget Impact</p>
+</div>
+<span class="material-symbols-outlined text-gray-400 transition-transform duration-300 group-open:rotate-180">keyboard_arrow_down</span>
+</summary>
+<div class="px-4 pb-4 pl-[3.75rem]">
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-normal">
+<span class="text-red-600 dark:text-red-400 font-medium">High Impact.</span> The monthly cost is significantly higher than your average spending in this category.
+                            </p>
+</div>
+</details>
+<!-- History Pattern (Red) -->
+<details class="group flex flex-col rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</div>
+<p class="text-[#0e121b] dark:text-white text-sm font-semibold">History Pattern</p>
+</div>
+<span class="material-symbols-outlined text-gray-400 transition-transform duration-300 group-open:rotate-180">keyboard_arrow_down</span>
+</summary>
+<div class="px-4 pb-4 pl-[3.75rem]">
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-normal">
+<span class="text-red-600 dark:text-red-400 font-medium">Inconsistent Usage.</span> Similar educational subscriptions in the past were used less than 2 hours per month.
+                            </p>
+</div>
+</details>
+<!-- Motivation (Yellow) -->
+<details class="group flex flex-col rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<p class="text-[#0e121b] dark:text-white text-sm font-semibold">Motivation</p>
+</div>
+<span class="material-symbols-outlined text-gray-400 transition-transform duration-300 group-open:rotate-180">keyboard_arrow_down</span>
+</summary>
+<div class="px-4 pb-4 pl-[3.75rem]">
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-normal">
+<span class="text-yellow-600 dark:text-yellow-400 font-medium">Moderate.</span> You have shown interest in this topic recently, but haven't engaged deeply yet.
+                            </p>
+</div>
+</details>
+<!-- Time Availability (Green) -->
+<details class="group flex flex-col rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<p class="text-[#0e121b] dark:text-white text-sm font-semibold">Time Availability</p>
+</div>
+<span class="material-symbols-outlined text-gray-400 transition-transform duration-300 group-open:rotate-180">keyboard_arrow_down</span>
+</summary>
+<div class="px-4 pb-4 pl-[3.75rem]">
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-normal">
+<span class="text-emerald-600 dark:text-emerald-400 font-medium">Good.</span> Your calendar shows available slots on weekends that match average course lengths.
+                            </p>
+</div>
+</details>
+</div>
+</div>
+<div class="h-6"></div>
+</div>
+<!-- Sticky Action Buttons -->
+<div class="fixed bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark border-t border-gray-200 dark:border-gray-800 p-4 pb-8 backdrop-blur-xl bg-opacity-95 dark:bg-opacity-95 z-50 max-w-md mx-auto">
+<div class="flex flex-col gap-3">
+<button class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-white shadow-lg shadow-primary/25 hover:bg-blue-600 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[20px]">alarm_add</span>
+<span class="text-base font-bold tracking-tight">Set Reminder (30 days)</span>
+</button>
+<button class="flex w-full items-center justify-center gap-2 rounded-xl bg-transparent border border-gray-300 dark:border-gray-700 px-6 py-3.5 text-[#0e121b] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-[0.98] transition-all">
+<span class="text-base font-semibold tracking-tight">Subscribe Anyway</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>
+
+<!-- Monthly Health Report -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Monthly Health Report</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "mint": {
+                            400: "#34d399",
+                            500: "#10b981",
+                            600: "#059669",
+                        }
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#111318] dark:text-white font-display min-h-screen flex flex-col items-center">
+<!-- Mobile Container -->
+<div class="relative w-full max-w-md bg-background-light dark:bg-background-dark min-h-screen shadow-2xl flex flex-col pb-24">
+<!-- Top App Bar -->
+<div class="flex items-center px-4 py-4 bg-background-light dark:bg-background-dark sticky top-0 z-20">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-[#111318] dark:text-white">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="ml-4 text-lg font-bold leading-tight flex-1">Monthly Health Report</h1>
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-[#111318] dark:text-white">
+<span class="material-symbols-outlined text-[24px]">more_vert</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto no-scrollbar px-4 space-y-6">
+<!-- Health Score Gauge Card -->
+<div class="bg-white dark:bg-[#1a2233] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 relative overflow-hidden">
+<div class="flex flex-col items-center justify-center">
+<!-- Gauge SVG -->
+<div class="relative size-40 mb-4">
+<svg class="size-full -rotate-90" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle class="text-gray-100 dark:text-gray-700 stroke-current" cx="50" cy="50" fill="transparent" r="42" stroke-width="8"></circle>
+<!-- Progress Circle (87%) -->
+<circle class="text-mint-500 dark:text-mint-400 stroke-current" cx="50" cy="50" fill="transparent" r="42" stroke-dasharray="264" stroke-dashoffset="34" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<!-- Center Text -->
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-[#111318] dark:text-white">87</span>
+<span class="text-xs font-medium text-gray-400 uppercase tracking-wide">Score</span>
+</div>
+</div>
+<h2 class="text-xl font-bold text-[#111318] dark:text-white mb-1">November Health Score</h2>
+<p class="text-gray-500 dark:text-gray-400 text-sm text-center">Great job! You're in the top 10% of savers this month.</p>
+</div>
+</div>
+<!-- Insight Bubble -->
+<div class="flex items-start gap-3 p-4 bg-primary/10 dark:bg-primary/20 rounded-xl border border-primary/20">
+<div class="bg-primary/20 p-2 rounded-full shrink-0 text-primary dark:text-blue-300">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+</div>
+<div>
+<h3 class="text-sm font-bold text-[#111318] dark:text-white mb-0.5">Top Saver Insight</h3>
+<p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        You saved <span class="font-bold text-mint-600 dark:text-mint-400">$15.00</span> by switching your music plan to annual billing.
+                    </p>
+</div>
+</div>
+<!-- Total Savings Card -->
+<div class="flex flex-col gap-2 rounded-2xl p-6 bg-mint-500 text-white shadow-lg relative overflow-hidden group">
+<!-- Abstract Pattern Background -->
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all duration-500" data-alt="Abstract soft glowing orb decoration"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+<p class="text-white/90 text-sm font-medium">Total Savings</p>
+</div>
+<p class="text-4xl font-bold tracking-tight mb-1">$120</p>
+<p class="text-white/80 text-sm">saved this quarter</p>
+</div>
+</div>
+<!-- Category Breakdown -->
+<div>
+<h2 class="text-[#111318] dark:text-white text-lg font-bold leading-tight mb-4">Category Breakdown</h2>
+<div class="grid grid-cols-2 gap-3">
+<!-- Music -->
+<div class="flex flex-col gap-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#1a2233] p-4 hover:shadow-md transition-shadow">
+<div class="size-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+<span class="material-symbols-outlined">music_note</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-[#111318] dark:text-white text-base font-semibold">Music</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">$0.50/hr</p>
+</div>
+</div>
+<!-- Streaming -->
+<div class="flex flex-col gap-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#1a2233] p-4 hover:shadow-md transition-shadow">
+<div class="size-10 rounded-full bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+<span class="material-symbols-outlined">tv</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-[#111318] dark:text-white text-base font-semibold">Streaming</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">$0.20/hr</p>
+</div>
+</div>
+<!-- Gaming -->
+<div class="flex flex-col gap-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#1a2233] p-4 hover:shadow-md transition-shadow">
+<div class="size-10 rounded-full bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400">
+<span class="material-symbols-outlined">sports_esports</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-[#111318] dark:text-white text-base font-semibold">Gaming</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">$1.10/hr</p>
+</div>
+</div>
+<!-- Fitness -->
+<div class="flex flex-col gap-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#1a2233] p-4 hover:shadow-md transition-shadow">
+<div class="size-10 rounded-full bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400">
+<span class="material-symbols-outlined">pool</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-[#111318] dark:text-white text-base font-semibold">Fitness</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">$0.80/hr</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Extra spacing for scroll -->
+<div class="h-4"></div>
+</div>
+<!-- Sticky Bottom Button -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light dark:via-background-dark to-transparent w-full max-w-md mx-auto z-30">
+<button class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+                Share Report
+            </button>
+</div>
+</div>
+</body></html>
+
+<!-- Subscription Hub -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Subscription Hub</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e2430",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between p-4 pb-2 sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Subscription Hub</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</button>
+</div>
+</header>
+<!-- Calendar Widget -->
+<section class="flex flex-col gap-4 p-4">
+<div class="flex flex-col gap-0.5 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-2">
+<button class="size-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<p class="text-base font-bold leading-tight text-center">Next Renewal: Oct 2023</p>
+<button class="size-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-7 gap-1">
+<!-- Days Header -->
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 text-center py-2">S</p>
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 text-center py-2">M</p>
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 text-center py-2">T</p>
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 text-center py-2">W</p>
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 text-center py-2">T</p>
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 text-center py-2">F</p>
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 text-center py-2">S</p>
+<!-- Days -->
+<button class="h-9 w-full rounded-full flex items-center justify-center text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700">1</button>
+<button class="h-9 w-full rounded-full flex items-center justify-center text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700">2</button>
+<button class="h-9 w-full rounded-full flex items-center justify-center text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700">3</button>
+<button class="h-9 w-full rounded-full flex items-center justify-center text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700">4</button>
+<button class="h-9 w-full rounded-full flex items-center justify-center text-sm font-medium bg-primary text-white shadow-md shadow-primary/30">5</button>
+<button class="h-9 w-full rounded-full flex items-center justify-center text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700 relative">
+                        6
+                        <span class="absolute bottom-1 w-1 h-1 bg-primary rounded-full"></span>
+</button>
+<button class="h-9 w-full rounded-full flex items-center justify-center text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700">7</button>
+</div>
+</div>
+</section>
+<!-- Search Bar -->
+<div class="px-4 pb-2">
+<label class="flex flex-col w-full h-12">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-surface-light dark:bg-surface-dark shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
+<div class="text-slate-400 flex items-center justify-center pl-4 pr-2">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+<input class="flex w-full min-w-0 flex-1 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 px-2 text-base font-normal leading-normal border-none focus:ring-0 focus:outline-none" placeholder="Search subscriptions" value=""/>
+</div>
+</label>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-3 px-4 py-2 overflow-x-auto no-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center px-5 rounded-full bg-primary text-white shadow-md shadow-primary/20 transition-transform active:scale-95">
+<p class="text-sm font-bold">All</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors active:scale-95">
+<p class="text-sm font-medium">Active</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors active:scale-95">
+<p class="text-sm font-medium">Paused</p>
+</button>
+</div>
+<!-- List Section: Entertainment -->
+<div class="px-4 pt-4 pb-2">
+<h3 class="text-lg font-bold leading-tight tracking-[-0.015em] mb-3">Entertainment</h3>
+<div class="flex flex-col gap-3">
+<!-- Item 1: Netflix -->
+<div class="flex items-center p-3 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 shadow-sm transition-transform active:scale-[0.99] cursor-pointer">
+<div class="size-12 rounded-xl bg-black flex items-center justify-center shrink-0 mr-4 overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-80" data-alt="Abstract red N logo pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClNANs_PTH4vdPk0yJ9GoKonOtRYLO0WW_Ta90lChf-EoE7eSzE2BFiUd3AdXfrw60F93gT1_ULJQkSw_Qoga3g7ETBiHOd0IhoeIjKutoE_ox2jqOrhQmgw5nkuMR355FX1e8PdjCLz0Di468gIl_tjJzlIeJfJpQy7Kgfyas5qp4i4OipnSIUwRSqc5uQ9nPs1HKbXhitynUsfZwa5MUeofJQ8C_HBPpjyXxhVnYrBGOgIuMKz-xT5yRsyH-WwlvPijZDZtFwNk"/>
+<span class="absolute text-red-600 font-bold text-xl">N</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h4 class="text-base font-bold truncate">Netflix</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Premium 4K HDR</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold">$15.99</span>
+<div class="flex items-center gap-1 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[12px] text-green-700 dark:text-green-400 fill-current">bolt</span>
+<span class="text-[10px] font-bold text-green-700 dark:text-green-400">9.2</span>
+</div>
+</div>
+</div>
+<!-- Item 2: Spotify -->
+<div class="flex items-center p-3 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 shadow-sm transition-transform active:scale-[0.99] cursor-pointer">
+<div class="size-12 rounded-xl bg-[#1DB954] flex items-center justify-center shrink-0 mr-4 overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-90 mix-blend-overlay" data-alt="Abstract green sound waves" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8RwGxoUawjmiFXvGmP865issY-1AxbivltqFTaU5SUwxu6E0vZGooAJ6e9-ePRO_JMGPO8SoWwVfhEz9V7qT7Q8AoHMVyT9Wz02h2wh3RLj7kZSigiH2ByjyQVi1ByfUMqh9Icci4u3y0iOiI7M_ArNdgUWIRPM1BCmKsdopQScdytFozTyn0VJhPLKpT5HH4es91FrL3ByREz1UKzm9wBjW0D2k9RDCJzqiJv5QG8zYLyImDwAhN4JChIo5z_71E9nxOsTkr9hI"/>
+<span class="material-symbols-outlined text-white text-2xl absolute">headphones</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h4 class="text-base font-bold truncate">Spotify</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Family Plan</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold">$14.99</span>
+<div class="flex items-center gap-1 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[12px] text-green-700 dark:text-green-400 fill-current">bolt</span>
+<span class="text-[10px] font-bold text-green-700 dark:text-green-400">8.8</span>
+</div>
+</div>
+</div>
+<!-- Item 3: HBO Max -->
+<div class="flex items-center p-3 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 shadow-sm transition-transform active:scale-[0.99] cursor-pointer">
+<div class="size-12 rounded-xl bg-purple-900 flex items-center justify-center shrink-0 mr-4 overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="Abstract purple gradient" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMnGjJwCPnqJeAxUFSTwGgmTkCcjFcUsTXfNzxSifx3gBxs9pxg8Y9P47Sc4u2t_nGoRUjpcCTvx4q2BoUJr9l4o8C-kd-mFTQcVmxSCY1MiQix4gqiE_U0fWJpORt1yEL8KMEL0tIHt5YZfvc91d-XYxQHBa2BwNSPXO7QoTtNOXDm4osk9gZ-nXvTqTOiuBN0_XE3zaHZ2_VHM9bcj0pzjnZxXEAo1aLDzBPwAPbYJrMeoKo5_wXay125YGMkAjd8XYBYa_34JQ"/>
+<span class="text-white font-bold text-xs absolute">MAX</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h4 class="text-base font-bold truncate">HBO Max</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Ad-Free</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold">$9.99</span>
+<div class="flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900/30 px-1.5 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[12px] text-yellow-700 dark:text-yellow-400 fill-current">bolt</span>
+<span class="text-[10px] font-bold text-yellow-700 dark:text-yellow-400">7.5</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- List Section: Productivity -->
+<div class="px-4 py-2 mb-8">
+<h3 class="text-lg font-bold leading-tight tracking-[-0.015em] mb-3 mt-2">Productivity</h3>
+<div class="flex flex-col gap-3">
+<!-- Item 4: Figma -->
+<div class="flex items-center p-3 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 shadow-sm transition-transform active:scale-[0.99] cursor-pointer">
+<div class="size-12 rounded-xl bg-[#1e1e1e] flex items-center justify-center shrink-0 mr-4 border border-slate-100 dark:border-slate-700 overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-80" data-alt="Colorful abstract shapes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaAI3jvA46DAl-l6tZzWlJ17rttncVcClKVlEC8sWNyRCCTtXXAymovJ7-77oL3Af4rOah5Zd3GH6IuG2Sp3aAhV09sDuAzSCoqrbLrW93fGX6TJkgZMiNViefkEwhDJwuqVWlhTgr5CA1_xMgc3MXd5tD6rVtS-20BlBfAnNpSZv4C7K5hgNYk2Pb-rk6eq2zP6LeziboHgmA9f78zBe6BdWAXZp-GZFB4kcfy1cZb7eCiweB5l45un2MqAnxIWPA1qAyipx7vKE"/>
+<span class="material-symbols-outlined text-white text-2xl absolute">draw</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h4 class="text-base font-bold truncate">Figma</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">Professional</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold">$12.00</span>
+<div class="flex items-center gap-1 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[12px] text-green-700 dark:text-green-400 fill-current">bolt</span>
+<span class="text-[10px] font-bold text-green-700 dark:text-green-400">9.8</span>
+</div>
+</div>
+</div>
+<!-- Item 5: ChatGPT -->
+<div class="flex items-center p-3 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 shadow-sm transition-transform active:scale-[0.99] cursor-pointer">
+<div class="size-12 rounded-xl bg-[#74AA9C] flex items-center justify-center shrink-0 mr-4 overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-30 mix-blend-overlay" data-alt="Abstract teal network" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdJMUH2YtKL7K8yjUzH-b9AKo_VqCo9Dq--KATbSliWLxBbj_phOHipXzDCJrNrnO8hdG9a7EF66FIZAziHlgofPFauPQ1GLrldIHw6SNIpDEU1eM5kiKozfBX38tSpZgecK233TBCfJdugax4OQ79vGh5r58RYr2bnX_2GxKrEnPUM8sGN50y8OAAYMMA4p5ozjvDpSNDsh5Z8CR7Mz_MRuTiZVJYxmcbMoADplOnuOw1sZcG6NgZB1tMwJ8grLAToYfx-I05aGU"/>
+<span class="material-symbols-outlined text-white text-2xl absolute">smart_toy</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h4 class="text-base font-bold truncate">ChatGPT Plus</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">AI Assistant</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold">$20.00</span>
+<div class="flex items-center gap-1 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[12px] text-green-700 dark:text-green-400 fill-current">bolt</span>
+<span class="text-[10px] font-bold text-green-700 dark:text-green-400">9.5</span>
+</div>
+</div>
+</div>
+<!-- Item 6: Dropbox -->
+<div class="flex items-center p-3 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 shadow-sm transition-transform active:scale-[0.99] cursor-pointer opacity-70">
+<div class="size-12 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 mr-4 overflow-hidden relative grayscale">
+<img class="w-full h-full object-cover opacity-50" data-alt="Abstract blue box pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlvFCgtjPs4Wqy0-jPadQdFoiMwY4kuYiU70SZMq_FaQwRZFrXYnhMpfwXl7kV5isNiHoEDEib_uPe6RIl9gx7mJ6u_LKmPdSjB3DAp9EVtyJnhw9S4vJLmyTTP6Yi_VORm_zXng_giGvqO8sBqjvVTezIu5tkbHfXgGeefWB6unreX1q5ulM9JG6ZtLNWgeRkwjbb6F7agomAvlB3CRx8_JO7zwXEt-fSBYYr39ZoXMjAGFSo42lw2LCnCpZO5IVq3ARbP9h9TlA"/>
+<span class="material-symbols-outlined text-white text-2xl absolute">inventory_2</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold truncate text-slate-500 dark:text-slate-400">Dropbox</h4>
+<span class="text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-500 px-1.5 py-0.5 rounded">PAUSED</span>
+</div>
+<p class="text-xs text-slate-400 dark:text-slate-500 font-medium truncate">Standard Plan</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold text-slate-400">$11.99</span>
+<div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[12px] text-slate-500 fill-current">bolt</span>
+<span class="text-[10px] font-bold text-slate-500">6.0</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom padding for scroll -->
+<div class="h-6"></div>
+</div>
+<!-- Dark Mode Toggle Script (Optional for testing) -->
+<script>
+        // Simple script to demonstrate dark mode capability if user wants to toggle it manually via console or logic
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body></html>
